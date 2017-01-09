@@ -4,10 +4,10 @@
   "private": true,
   "proxy": "http://localhost:8080/alfresco",
   "devDependencies": {
+    "alfresco-js-utils": "0.0.1",
     "react-scripts": "0.8.4"
   },
   "dependencies": {
-    "alfresco-js-utils": "file:///mnt/DATA/Git/Experiments/alfresco-js-utils/alfresco-js-utils-0.0.1.tgz",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-router": "^3.0.0"
