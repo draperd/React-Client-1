@@ -146,8 +146,12 @@ class ListView extends React.Component {
                   </td>
                </tr>
             )}</tbody>
-            <tfoot colSpan="3">
-                <PaginationControls list={this.props.list}/>
+            <tfoot>
+               <tr>
+                  <td colSpan="5">
+                     <PaginationControls list={this.props.list}/>
+                  </td>
+               </tr>
             </tfoot>
          </table>);
    }
