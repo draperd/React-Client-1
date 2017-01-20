@@ -9,6 +9,8 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Home from "./components/Home";
 
+import "material-design-lite/material.css";
+
 
 function requireAuth(nextState, replace) {
    if (!auth.loggedIn()) {
