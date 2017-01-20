@@ -4,7 +4,9 @@ import axios from "axios";
 const customEvents = {
    ITEM_CREATED: "itemCreated",
    PAGE_FORWARDS: "pageForward",
-   PAGE_BACKWARDS: "pageBackward"
+   PAGE_BACKWARDS: "pageBackward",
+   UPDATE_MAX_ITEMS: "updateMaxItems",
+   ITEM_UPDATED: "itemUpdate"
 };
 
 
@@ -75,29 +77,79 @@ class DeleteUserButton extends React.Component {
    }
 }
 
-class ListView extends React.Component {
+class EnableUserToggle extends React.Component {
 
-   delete(entry) {
+   constructor(props) {
+      super(props);
+      this.toggleId = this.props.user.entry.id + "_enabledToggle";
+   }
 
+   onToggle(event) {
+      axios.put(`/api/-default-/public/alfresco/versions/1/people/${this.props.user.entry.id}`, {
+         enabled: this.refs.toggle.checked
+      })
+         .then(response => {
+            if (response.status === 200)
+            {
+               var changeEvent = new CustomEvent(customEvents.ITEM_UPDATED, {
+                  bubbles: true
+               });
+               this.refs.toggle.dispatchEvent(changeEvent);
+            }
+         })
+   }
+
+   componentDidMount() {
+      window.componentHandler.upgradeElement(this.refs.componentNode);
    }
 
    render() {
-      return ( <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                  <thead>
-                     <tr>
-                        <th className="mdl-data-table__cell--non-numeric">Name</th>
-                        <th className="mdl-data-table__cell--non-numeric">Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody>{this.props.list.entries.map((entry) => 
-                     <tr>
-                        <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)} key={entry.entry.id}>{entry.entry.firstName} {entry.entry.lastName}</td>
-                        <td className="mdl-data-table__cell--non-numeric">
-                           <DeleteUserButton user={entry} />
-                        </td>
-                     </tr>
-                  )}</tbody>
-               </table>);
+      return (
+         <label ref="componentNode" className="mdl-switch mdl-js-switch mdl-js-ripple-effect" htmlFor={this.toggleId}>
+            <input type="checkbox" 
+                   ref="toggle"
+                   id={this.toggleId} 
+                   className="mdl-switch__input" 
+                   checked={this.props.user.entry.enabled} 
+                   onChange={this.onToggle.bind(this)} />
+            <span className="mdl-switch__label"></span>
+         </label>
+      );
+   }
+}
+
+
+class ListView extends React.Component {
+
+   render() {
+      return ( 
+         <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <thead>
+               <tr>
+                  <th className="mdl-data-table__cell--non-numeric">Name</th>
+                  <th className="mdl-data-table__cell--non-numeric">User Name</th>
+                  <th className="mdl-data-table__cell--non-numeric">E-Mail Address</th>
+                  <th className="mdl-data-table__cell--non-numeric">Enabled</th>
+                  <th className="mdl-data-table__cell--non-numeric">Actions</th>
+               </tr>
+            </thead>
+            <tbody>{this.props.list.entries.map((entry) => 
+               <tr>
+                  <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)} key={entry.entry.id}>{entry.entry.firstName} {entry.entry.lastName}</td>
+                  <td className="mdl-data-table__cell--non-numeric">{entry.entry.id}</td>
+                  <td className="mdl-data-table__cell--non-numeric">{entry.entry.email}</td>
+                  <td className="mdl-data-table__cell--non-numeric">
+                     <EnableUserToggle user={entry} />
+                  </td>
+                  <td className="mdl-data-table__cell--non-numeric">
+                     <DeleteUserButton user={entry} />
+                  </td>
+               </tr>
+            )}</tbody>
+            <tfoot colSpan="3">
+                <PaginationControls list={this.props.list}/>
+            </tfoot>
+         </table>);
    }
 }
  
@@ -108,13 +160,13 @@ class List extends React.Component {
 
       this.state = {
          skipCount: 0,
-         maxItems: 3,
+         maxItems: 5,
          relativePath: "/",
          list: {
             entries: [],
             pagination: {
                skipCount: 0,
-               maxItems: 3
+               maxItems: 5
             }
          }
       };
@@ -129,10 +181,20 @@ class List extends React.Component {
 
    componentDidMount() {
       this.refs.list.addEventListener(customEvents.ITEM_CREATED, this.getData.bind(this));
+      this.refs.list.addEventListener(customEvents.ITEM_UPDATED, this.getData.bind(this));
       this.refs.list.addEventListener(customEvents.PAGE_BACKWARDS, this.pageBack.bind(this));
       this.refs.list.addEventListener(customEvents.PAGE_FORWARDS, this.pageForward.bind(this));
+      this.refs.list.addEventListener(customEvents.UPDATE_MAX_ITEMS, this.updateMaxItems.bind(this));
 
       window.componentHandler.upgradeElement(this.refs.list);
+   }
+
+   updateMaxItems(evt) {
+      if (evt && evt.detail)
+      {
+         this.state.maxItems = evt.detail;
+         this.getData();
+      }
    }
 
    pageBack() {
@@ -219,7 +281,7 @@ class CreateUserForm extends React.Component {
 
    render() {
       return (
-         <form autocomplete="nope" onSubmit={this.handleSubmit}>
+         <form autoComplete="nope" onSubmit={this.handleSubmit}>
             <TextField id="new_user_id"
                        name="id"
                        value={this.props.user.id}
@@ -336,18 +398,49 @@ class PaginationControls extends React.Component {
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
-   render() {
-      return (<span ref="componentNode">
-         <button className="mdl-button mdl-js-button mdl-button--raised" 
-                 disabled={this.props.list.pagination.skipCount ? false : true} 
-                 onClick={this.pageBack.bind(this)}>Page Back</button>
+   updateMaxItems(maxItems) {
+      let changeEvent = new CustomEvent(customEvents.UPDATE_MAX_ITEMS, {
+         detail: maxItems,
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
 
-         <span>{this.props.list.pagination.skipCount / this.props.list.pagination.maxItems + 1}</span>
+   render() {
+      return (<div ref="componentNode">
          
-         <button className="mdl-button mdl-js-button mdl-button--raised" 
+         <span>Results per page:</span>
+
+         <span>{this.props.list.pagination.maxItems}</span>
+
+         <button id="paginationItemsPerPage"
+                 className="mdl-button mdl-js-button mdl-button--icon" 
+                 onClick={this.pageBack.bind(this)}>
+            <i className="material-icons">arrow_drop_down</i>
+         </button>
+
+         <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+             htmlFor="paginationItemsPerPage">
+            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(5)}>5</li>
+            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(10)}>10</li>
+            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(20)}>20</li>
+            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(50)}>50</li>
+         </ul>
+
+         <span>{this.props.list.pagination.skipCount + 1} - {this.props.list.pagination.skipCount + this.props.list.pagination.maxItems} of {this.props.list.pagination.totalItems}</span>
+
+         <button className="mdl-button mdl-js-button mdl-button--icon" 
+                 disabled={this.props.list.pagination.skipCount ? false : true} 
+                 onClick={this.pageBack.bind(this)}>
+            <i className="material-icons">keyboard_arrow_left</i>
+         </button>
+
+         <button className="mdl-button mdl-js-button mdl-button--icon" 
                  disabled={this.props.list.pagination.hasMoreItems ? false : true} 
-                 onClick={this.pageForward.bind(this)}>Page Forward</button>
-      </span>)
+                 onClick={this.pageForward.bind(this)}>
+            <i className="material-icons">keyboard_arrow_right</i>
+         </button>
+      </div>)
    }
 }
 
@@ -357,9 +450,6 @@ class Toolbar extends React.Component {
    render() {
       return ( <span>
                   <CreateUserButton/>
-                  <PaginationControls list={this.props.list} 
-                                      pageBackHandler={this.pageBack}
-                                      pageForwardHandler={this.pageForward}/>
                </span>)
    }
 }
