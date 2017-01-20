@@ -2,22 +2,99 @@ import React from "react";
 import axios from "axios";
 
 const customEvents = {
-   ITEM_CREATED: "itemCreated"
+   ITEM_CREATED: "itemCreated",
+   PAGE_FORWARDS: "pageForward",
+   PAGE_BACKWARDS: "pageBackward"
 };
 
 
+const DeleteUserButtonStyles = {
+   dialogContent: {
+      whiteSpace: "normal"
+   }
+};
+
+
+class DeleteUserButton extends React.Component {
+
+   confirm() {
+      this.refs.dialog.showModal();
+   }
+
+   cancel() {
+      this.refs.dialog.close();
+   }
+
+   delete() {
+      axios.delete(`/api/-default-/public/alfresco/versions/1/people/{this.props.user.entry.id}`)
+         .then(response => {
+            if (response.status === 200)
+            {
+               this.refs.dialog.close();
+               var changeEvent = new CustomEvent(customEvents.ITEM_CREATED, {
+                  // detail: response
+                  bubbles: true
+               });
+               this.refs.componentNode.dispatchEvent(changeEvent);
+            }
+            else
+            {
+               // TODO: Display an error
+            }
+         });
+   }
+
+   handleFormChange(value) {
+      this.setState({
+         user: value
+      });
+   }
+
+   render() {
+      return (<span ref="componentNode">
+         <dialog ref="dialog" className="mdl-dialog">
+            <h3 className="mdl-dialog__title">Delete {this.props.user.entry.firstName} {this.props.user.entry.lastName}</h3>
+            <div className="mdl-dialog__content" style={DeleteUserButtonStyles.dialogContent}>
+               <p>Are you sure you want to delete {this.props.user.entry.firstName} {this.props.user.entry.lastName}</p>
+               <p>Deleting a user does not remove their permissions from the repository. These permissions will be reused if the user is recreated later. You can also disable the user account.</p>
+            </div>
+            <div className="mdl-dialog__actions">
+               <button type="button" 
+                       className="mdl-button"
+                       onClick={this.delete.bind(this)}>Delete</button>
+               <button type="button" 
+                       className="mdl-button"
+                       onClick={this.cancel.bind(this)}>Cancel</button>
+           </div>
+         </dialog>
+         <button className="mdl-button mdl-js-button mdl-button--icon"
+                 onClick={this.confirm.bind(this)}>
+            <i className="material-icons">delete</i>
+         </button>
+      </span>)
+   }
+}
+
 class ListView extends React.Component {
+
+   delete(entry) {
+
+   }
 
    render() {
       return ( <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                   <thead>
                      <tr>
-                        <th className="mdl-data-table__cell--non-numeric">Material</th>
+                        <th className="mdl-data-table__cell--non-numeric">Name</th>
+                        <th className="mdl-data-table__cell--non-numeric">Actions</th>
                      </tr>
                   </thead>
                   <tbody>{this.props.list.entries.map((entry) => 
                      <tr>
                         <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)} key={entry.entry.id}>{entry.entry.firstName} {entry.entry.lastName}</td>
+                        <td className="mdl-data-table__cell--non-numeric">
+                           <DeleteUserButton user={entry} />
+                        </td>
                      </tr>
                   )}</tbody>
                </table>);
@@ -42,9 +119,6 @@ class List extends React.Component {
          }
       };
 
-
-      this.pageBack = this.pageBack.bind(this);
-      this.pageForward = this.pageForward.bind(this);
       this.navigate = this.navigate.bind(this);
       this.setRelativePath = this.setRelativePath.bind(this);
    }
@@ -55,6 +129,9 @@ class List extends React.Component {
 
    componentDidMount() {
       this.refs.list.addEventListener(customEvents.ITEM_CREATED, this.getData.bind(this));
+      this.refs.list.addEventListener(customEvents.PAGE_BACKWARDS, this.pageBack.bind(this));
+      this.refs.list.addEventListener(customEvents.PAGE_FORWARDS, this.pageForward.bind(this));
+
       window.componentHandler.upgradeElement(this.refs.list);
    }
 
@@ -142,7 +219,7 @@ class CreateUserForm extends React.Component {
 
    render() {
       return (
-         <form onSubmit={this.handleSubmit}>
+         <form autocomplete="nope" onSubmit={this.handleSubmit}>
             <TextField id="new_user_id"
                        name="id"
                        value={this.props.user.id}
@@ -244,11 +321,32 @@ class CreateUserButton extends React.Component {
 }
 
 class PaginationControls extends React.Component {
+
+   pageBack() {
+      let changeEvent = new CustomEvent(customEvents.PAGE_BACKWARDS, {
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
+   pageForward() {
+      let changeEvent = new CustomEvent(customEvents.PAGE_FORWARDS, {
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
    render() {
-      return (<span>
-         <button className="mdl-button mdl-js-button mdl-button--raised" onClick={this.props.pageBackHandler}>Page Back</button>
+      return (<span ref="componentNode">
+         <button className="mdl-button mdl-js-button mdl-button--raised" 
+                 disabled={this.props.list.pagination.skipCount ? false : true} 
+                 onClick={this.pageBack.bind(this)}>Page Back</button>
+
          <span>{this.props.list.pagination.skipCount / this.props.list.pagination.maxItems + 1}</span>
-         <button className="mdl-button mdl-js-button mdl-button--raised" onClick={this.props.pageForwardHandler}>Page Forward</button>
+         
+         <button className="mdl-button mdl-js-button mdl-button--raised" 
+                 disabled={this.props.list.pagination.hasMoreItems ? false : true} 
+                 onClick={this.pageForward.bind(this)}>Page Forward</button>
       </span>)
    }
 }
