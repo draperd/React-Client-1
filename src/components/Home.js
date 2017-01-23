@@ -432,6 +432,12 @@ class CreateUserForm extends React.Component {
                        onChange={this.handleChange} 
                        label="First Name"/>
 
+            <TextField id="new_user_lastName"
+                       name="lastName"
+                       value={this.props.user.firstName}
+                       onChange={this.handleChange} 
+                       label="Last Name"/>
+
             <TextField id="new_user_email"
                        name="email"
                        value={this.props.user.email}
