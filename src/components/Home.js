@@ -7,7 +7,8 @@ const customEvents = {
    PAGE_BACKWARDS: "pageBackward",
    UPDATE_MAX_ITEMS: "updateMaxItems",
    ITEM_UPDATED: "itemUpdate",
-   REORDER: "reorderItems"
+   REORDER: "reorderItems",
+   FILTER: "filterItems"
 };
 
 
@@ -197,7 +198,29 @@ class ListView extends React.Component {
 }
 
 class Filter extends React.Component {
-   
+
+   onChange(event) {
+      var changeEvent = new CustomEvent(customEvents.FILTER, {
+         detail: {
+            term: event.target.value
+         },
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
+   render() {
+      return (
+         <div ref="componentNode"
+              className="mdl-textfield mdl-js-textfield">
+            <input className="mdl-textfield__input" 
+                   type="text" 
+                   id="filter" 
+                   onChange={this.onChange.bind(this)}/>
+            <label className="mdl-textfield__label" for="filter">Search...</label>
+         </div>
+      );
+   }
 }
  
 class List extends React.Component {
@@ -235,8 +258,25 @@ class List extends React.Component {
       this.refs.list.addEventListener(customEvents.PAGE_FORWARDS, this.pageForward.bind(this));
       this.refs.list.addEventListener(customEvents.UPDATE_MAX_ITEMS, this.updateMaxItems.bind(this));
       this.refs.list.addEventListener(customEvents.REORDER, this.reorderItems.bind(this));
+      this.refs.list.addEventListener(customEvents.FILTER, this.filterItems.bind(this));
 
       window.componentHandler.upgradeElement(this.refs.list);
+   }
+
+   filterItems(event) {
+      if (event && event.detail && event.detail.term && event.detail.term.length > 1)
+      {
+         this.state.skipCount = 0;
+         let url = `/api/-default-/public/alfresco/versions/1/queries/people?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+         axios.get(url)
+            .then(response => {
+               this.setState({list: response.data.list});
+            });
+      }
+      else
+      {
+         this.getData();
+      }
    }
 
    reorderItems(evt) {
@@ -302,6 +342,7 @@ class List extends React.Component {
             <Toolbar list={this.state.list} 
                      pageBackHandler={this.pageBack}
                      pageForwardHandler={this.pageForward}></Toolbar>
+            <Filter />
             <ListView list={this.state.list}
                       navigationHandler={this.navigate}
                       orderBy={this.state.orderBy}

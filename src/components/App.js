@@ -47,9 +47,6 @@ const App = React.createClass({
                </div>
                <main className="mdl-layout__content">
                   <div className="page-content" data-dojo-attach-point="contentNode">
-                     <div className="mdl-layout__header-row" data-dojo-attach-point="toolbarNode">
-                        <div className="mdl-layout-spacer" data-dojo-attach-point="toolbarSpacerNode"></div>
-                     </div>
                      {this.props.children}
                   </div>
                </main>
