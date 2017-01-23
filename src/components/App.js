@@ -21,20 +21,39 @@ const App = React.createClass({
       auth.login()
    },
 
+   componentDidMount() {
+      window.componentHandler.upgradeElement(this.refs.componentNode);
+   },
+
    render() {
       return (
-         <div>
-            <ul>
-               <li>
-                  {this.state.loggedIn ? (
-                     <Link to="/logout">Log out</Link>
-                  ) : (
-                     <Link to="/login">Sign in</Link>
-                  )}
-               </li>
-               <li><Link to="/home">Home</Link>(authenticated)</li>
-           </ul>
-           {this.props.children || <p>You are {!this.state.loggedIn && 'not'} logged in.</p>}
+         <div ref="componentNode" className="mdl-layout__container">
+            <div className="mdl-layout mdl-js-layout">
+               <header className="mdl-layout__header ">
+                  <div className="mdl-layout__header-row" >
+                     <span className="mdl-layout-title">Alfresco Administration Console</span>
+                     <div className="mdl-layout-spacer"></div>
+                     <button className="mdl-button mdl-js-button mdl-button--icon">
+                       <i className="material-icons">exit_to_app</i>
+                     </button>
+                  </div>
+               </header>
+               <div className="mdl-layout__drawer">
+                  <span className="mdl-layout-title">Navigation</span>
+                  <nav className="mdl-navigation">
+                     <a className="mdl-navigation__link" href="">Users</a>
+                     <a className="mdl-navigation__link" href="">Groups</a>
+                  </nav>
+               </div>
+               <main className="mdl-layout__content">
+                  <div className="page-content" data-dojo-attach-point="contentNode">
+                     <div className="mdl-layout__header-row" data-dojo-attach-point="toolbarNode">
+                        <div className="mdl-layout-spacer" data-dojo-attach-point="toolbarSpacerNode"></div>
+                     </div>
+                     {this.props.children}
+                  </div>
+               </main>
+            </div>
          </div>
       )
    }
