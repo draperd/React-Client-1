@@ -6,7 +6,8 @@ const customEvents = {
    PAGE_FORWARDS: "pageForward",
    PAGE_BACKWARDS: "pageBackward",
    UPDATE_MAX_ITEMS: "updateMaxItems",
-   ITEM_UPDATED: "itemUpdate"
+   ITEM_UPDATED: "itemUpdate",
+   REORDER: "reorderItems"
 };
 
 
@@ -118,17 +119,55 @@ class EnableUserToggle extends React.Component {
    }
 }
 
+class TableHeading extends React.Component {
+
+   orderBy() {
+      var changeEvent = new CustomEvent(customEvents.REORDER, {
+         detail: {
+            orderBy: this.props.orderById
+         },
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
+   render() {
+      let sortIndicator = "";
+      if (this.props.orderById === this.props.orderBy)
+      {
+         let icon = this.props.orderDirection === "ASC" ? "arrow_upward" : "arrow_downward";
+         sortIndicator = <button className="mdl-button mdl-js-button mdl-button--icon">
+            <i className="material-icons">{icon}</i>
+         </button>
+      }
+      return (
+         <th ref="componentNode" className="mdl-data-table__cell--non-numeric" 
+             onClick={this.orderBy.bind(this)}>{sortIndicator}{this.props.label}</th>
+      );
+   }
+}
+
+
 
 class ListView extends React.Component {
 
    render() {
       return ( 
-         <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+         <table ref="componentNode" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
             <thead>
                <tr>
-                  <th className="mdl-data-table__cell--non-numeric">Name</th>
-                  <th className="mdl-data-table__cell--non-numeric">User Name</th>
-                  <th className="mdl-data-table__cell--non-numeric">E-Mail Address</th>
+                  <TableHeading label="Name" 
+                                orderById="firstName"
+                                orderBy={this.props.orderBy}
+                                orderDirection={this.props.orderDirection} />
+                  <TableHeading label="User Name" 
+                                orderById="id"
+                                orderBy={this.props.orderBy}
+                                orderDirection={this.props.orderDirection} />
+                  <TableHeading label="E-Mail Address" 
+                                orderById="email"
+                                orderBy={this.props.orderBy}
+                                orderDirection={this.props.orderDirection} />
                   <th className="mdl-data-table__cell--non-numeric">Enabled</th>
                   <th className="mdl-data-table__cell--non-numeric">Actions</th>
                </tr>
@@ -156,6 +195,10 @@ class ListView extends React.Component {
          </table>);
    }
 }
+
+class Filter extends React.Component {
+   
+}
  
 class List extends React.Component {
 
@@ -166,6 +209,8 @@ class List extends React.Component {
          skipCount: 0,
          maxItems: 5,
          relativePath: "/",
+         orderBy: "firstName",
+         orderDirection: "ASC",
          list: {
             entries: [],
             pagination: {
@@ -189,8 +234,18 @@ class List extends React.Component {
       this.refs.list.addEventListener(customEvents.PAGE_BACKWARDS, this.pageBack.bind(this));
       this.refs.list.addEventListener(customEvents.PAGE_FORWARDS, this.pageForward.bind(this));
       this.refs.list.addEventListener(customEvents.UPDATE_MAX_ITEMS, this.updateMaxItems.bind(this));
+      this.refs.list.addEventListener(customEvents.REORDER, this.reorderItems.bind(this));
 
       window.componentHandler.upgradeElement(this.refs.list);
+   }
+
+   reorderItems(evt) {
+      if (evt && evt.detail.orderBy)
+      {
+         this.state.orderBy = evt.detail.orderBy;
+         this.state.orderDirection = this.state.orderDirection === "ASC" ? "DESC" : "ASC";
+         this.getData();
+      }
    }
 
    updateMaxItems(evt) {
@@ -219,7 +274,7 @@ class List extends React.Component {
 
    getData() {
 
-      let url = `/api/-default-/public/alfresco/versions/1/people?skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}`;
+      let url = `/api/-default-/public/alfresco/versions/1/people?skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
       axios.get(url)
          .then(response => {
             this.setState({list: response.data.list});
@@ -248,7 +303,9 @@ class List extends React.Component {
                      pageBackHandler={this.pageBack}
                      pageForwardHandler={this.pageForward}></Toolbar>
             <ListView list={this.state.list}
-                      navigationHandler={this.navigate}></ListView>
+                      navigationHandler={this.navigate}
+                      orderBy={this.state.orderBy}
+                      orderDirection={this.state.orderDirection}></ListView>
          </div>)
    }
 }
