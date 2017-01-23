@@ -101,13 +101,27 @@ class EnableUserToggle extends React.Component {
          })
    }
 
+   componentDidUpdate(prevProps, prevStat) {
+      // NOTE: This was required to ensure rendering was correct, ideally this should not be necessary
+      if (this.props.user.entry.enabled)
+      {
+         this.refs.componentNode.classList.add("is-checked")
+      }
+      else
+      {
+         this.refs.componentNode.classList.remove("is-checked")
+      }
+   }
+
    componentDidMount() {
       window.componentHandler.upgradeElement(this.refs.componentNode);
    }
 
    render() {
       return (
-         <label ref="componentNode" className="mdl-switch mdl-js-switch mdl-js-ripple-effect" htmlFor={this.toggleId}>
+         <label ref="componentNode" 
+                className="mdl-switch mdl-js-switch mdl-js-ripple-effect" 
+                htmlFor={this.toggleId}>
             <input type="checkbox" 
                    ref="toggle"
                    id={this.toggleId} 
@@ -174,8 +188,8 @@ class ListView extends React.Component {
                </tr>
             </thead>
             <tbody>{this.props.list.entries.map((entry) => 
-               <tr>
-                  <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)} key={entry.entry.id}>{entry.entry.firstName} {entry.entry.lastName}</td>
+               <tr key={entry.entry.id}>
+                  <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)}>{entry.entry.firstName} {entry.entry.lastName}</td>
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.id}</td>
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.email}</td>
                   <td className="mdl-data-table__cell--non-numeric">
@@ -217,7 +231,7 @@ class Filter extends React.Component {
                    type="text" 
                    id="filter" 
                    onChange={this.onChange.bind(this)}/>
-            <label className="mdl-textfield__label" for="filter">Search...</label>
+            <label className="mdl-textfield__label" htmlFor="filter">Search...</label>
          </div>
       );
    }
@@ -266,12 +280,16 @@ class List extends React.Component {
    filterItems(event) {
       if (event && event.detail && event.detail.term && event.detail.term.length > 1)
       {
-         this.state.skipCount = 0;
-         let url = `/api/-default-/public/alfresco/versions/1/queries/people?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
-         axios.get(url)
-            .then(response => {
-               this.setState({list: response.data.list});
-            });
+         this.setState({
+            skipCount: 0,
+            orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
+         }, () => {
+            let url = `/api/-default-/public/alfresco/versions/1/queries/people?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+            axios.get(url)
+               .then(response => {
+                  this.setState({list: response.data.list});
+               });
+         });
       }
       else
       {
@@ -282,33 +300,45 @@ class List extends React.Component {
    reorderItems(evt) {
       if (evt && evt.detail.orderBy)
       {
-         this.state.orderBy = evt.detail.orderBy;
-         this.state.orderDirection = this.state.orderDirection === "ASC" ? "DESC" : "ASC";
-         this.getData();
+         this.setState({
+            orderBy: evt.detail.orderBy,
+            orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
+         }, () => {
+            this.getData();
+         });
       }
    }
 
    updateMaxItems(evt) {
       if (evt && evt.detail)
       {
-         this.state.maxItems = evt.detail;
-         this.getData();
+         this.setState({
+            maxItems: evt.detail
+         }, () => {
+            this.getData();
+         });
       }
    }
 
    pageBack() {
       if (this.state.list.pagination.skipCount)
       {
-         this.state.skipCount -= this.state.maxItems;
-         this.getData();
+         this.setState({
+            skipCount: this.state.skipCount - this.state.maxItems
+         }, () => {
+            this.getData();
+         });
       }
    }
 
    pageForward() {
       if (this.state.list.pagination.hasMoreItems)
       {
-         this.state.skipCount += this.state.maxItems;
-         this.getData();
+         this.setState({
+            skipCount: this.state.skipCount + this.state.maxItems
+         }, () => {
+            this.getData();
+         });
       }
    }
 
@@ -324,16 +354,22 @@ class List extends React.Component {
    navigate(item) {
       if (item.entry.isFolder)
       {
-         this.state.skipCount = 0;
-         this.state.relativePath += `${item.entry.name}/`;
-         this.getData();
+         this.setState({
+            skipCount: 0,
+            relativePath: `${this.state.relativePath}${item.entry.name}/`
+         }, () => {
+            this.getData();
+         });
       }
    }
 
    setRelativePath(relativePath) {
-      this.state.skipCount = 0;
-      this.state.relativePath = relativePath;
-      this.getData();
+      this.setState({
+            skipCount: 0,
+            relativePath: relativePath
+         }, () => {
+            this.getData();
+         });
    }
 
    render() {

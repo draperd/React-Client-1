@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import { browserHistory, Router, Route, Link, withRouter } from "react-router";
+import { browserHistory, Router, Route } from "react-router";
 
 import auth from "alfresco-js-utils/lib/Authentication";
 
