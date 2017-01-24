@@ -6,6 +6,8 @@ import { collectionEvents } from "./containers/Collection";
 
 import Pagination from "./controls/Pagination";
 
+import BreadcrumbTrail from "./navigation/BreadcrumbTrail";
+
 import TableCell from "./renderers/TableCell";
 import TableHeading from "./renderers/TableHeading";
 
@@ -193,6 +195,7 @@ const Home = React.createClass({
 
             <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" 
                         orderBy="name">
+               <BreadcrumbTrail/>
                <TableView 
                   headerChildren={
                      [<TableHeading label="Name"

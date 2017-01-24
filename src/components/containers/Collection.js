@@ -9,7 +9,8 @@ const collectionEvents = {
    ITEM_UPDATED: "itemUpdate",
    REORDER: "reorderItems",
    FILTER: "filterItems",
-   NAVIGATE: "navigate"
+   NAVIGATE: "navigate",
+   RELATIVE_PATH: "relativePath"
 };
 export { collectionEvents };
 
@@ -35,9 +36,6 @@ class Collection extends React.Component {
             }
          }
       };
-
-      this.navigate = this.navigate.bind(this);
-      this.setRelativePath = this.setRelativePath.bind(this);
    }
 
    componentWillMount() {
@@ -53,6 +51,7 @@ class Collection extends React.Component {
       this.refs.list.addEventListener(collectionEvents.REORDER, this.reorderItems.bind(this));
       this.refs.list.addEventListener(collectionEvents.FILTER, this.filterItems.bind(this));
       this.refs.list.addEventListener(collectionEvents.NAVIGATE, this.navigate.bind(this));
+      this.refs.list.addEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath.bind(this));
 
       window.componentHandler.upgradeElement(this.refs.list);
    }
@@ -143,20 +142,24 @@ class Collection extends React.Component {
       }
    }
 
-   setRelativePath(relativePath) {
-      this.setState({
-         skipCount: 0,
-         relativePath: relativePath
-      }, () => {
-         this.getData();
-      });
+   setRelativePath(event) {
+      if (event && event.detail)
+      {
+         this.setState({
+            skipCount: 0,
+            relativePath: event.detail
+         }, () => {
+            this.getData();
+         });
+      }
    }
 
    render() {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          list: this.state.list,
          orderBy: this.state.orderBy,
-         orderDirection: this.state.orderDirection
+         orderDirection: this.state.orderDirection,
+         relativePath: this.state.relativePath
       }));
       return (
          <div ref="list" >

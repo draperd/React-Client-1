@@ -1,11 +1,5 @@
 import React from "react";
 
-import Pagination from "../controls/Pagination";
-
-import Delete from "../renderers/Delete";
-import TableHeading from "../renderers/TableHeading";
-import Toggle from "../renderers/Toggle";
-
 class UserTableView extends React.Component {
 
    render() {
