@@ -12,7 +12,6 @@ import TableHeading from "./renderers/TableHeading";
 import TableView from "./views/TableView";
 import UserTableView from "./views/UserTableView";
 
-
 class Filter extends React.Component {
 
    onChange(event) {
@@ -55,7 +54,6 @@ class TextField extends React.Component {
          </div>
       )
    }
-
 }
 
 class CreateUserForm extends React.Component {
@@ -179,10 +177,6 @@ class CreateUserButton extends React.Component {
    }
 }
 
-
-
-
-
 const Home = React.createClass({
 
    render() {
@@ -200,13 +194,15 @@ const Home = React.createClass({
             <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" >
                <TableView 
                   headerChildren={
-                     <TableHeading label="Name" />
+                     [<TableHeading label="Name" />,
+                      <TableHeading label="Created By" />]
                   }
                   bodyChildren={
-                     <TableCell property="name" />
+                     [<TableCell property="name" />,
+                      <TableCell property="createdByUser.displayName" />]
                   }
                   footerChildren={
-                     <Pagination />
+                     <Pagination colspan="2"/>
                   }
                >
                </TableView>

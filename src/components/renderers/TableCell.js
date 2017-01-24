@@ -1,4 +1,5 @@
 import React from "react";
+import { get } from "lodash";
 
 class TableCell extends React.Component {
 
@@ -7,7 +8,7 @@ class TableCell extends React.Component {
       this.property = props.property || "id";
    }
    render() {
-      var renderedProperty = this.props.item.entry[this.property];
+      var renderedProperty = get(this.props.item.entry, this.property, "");
       return (
          <td className="mdl-data-table__cell--non-numeric">{renderedProperty}</td>
       );
