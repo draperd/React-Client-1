@@ -4,206 +4,8 @@ import axios from "axios";
 import Collection from "./containers/Collection";
 import { collectionEvents } from "./containers/Collection";
 
+import UserTableView from "./views/UserTableView";
 
-
-const DeleteUserButtonStyles = {
-   dialogContent: {
-      whiteSpace: "normal"
-   }
-};
-
-
-class DeleteUserButton extends React.Component {
-
-   confirm() {
-      this.refs.dialog.showModal();
-   }
-
-   cancel() {
-      this.refs.dialog.close();
-   }
-
-   delete() {
-      axios.delete(`/api/-default-/public/alfresco/versions/1/people/{this.props.user.entry.id}`)
-         .then(response => {
-            if (response.status === 200)
-            {
-               this.refs.dialog.close();
-               var changeEvent = new CustomEvent(collectionEvents.ITEM_CREATED, {
-                  // detail: response
-                  bubbles: true
-               });
-               this.refs.componentNode.dispatchEvent(changeEvent);
-            }
-            else
-            {
-               // TODO: Display an error
-            }
-         });
-   }
-
-   handleFormChange(value) {
-      this.setState({
-         user: value
-      });
-   }
-
-   render() {
-      return (<span ref="componentNode">
-         <dialog ref="dialog" className="mdl-dialog">
-            <h3 className="mdl-dialog__title">Delete {this.props.user.entry.firstName} {this.props.user.entry.lastName}</h3>
-            <div className="mdl-dialog__content" style={DeleteUserButtonStyles.dialogContent}>
-               <p>Are you sure you want to delete {this.props.user.entry.firstName} {this.props.user.entry.lastName}</p>
-               <p>Deleting a user does not remove their permissions from the repository. These permissions will be reused if the user is recreated later. You can also disable the user account.</p>
-            </div>
-            <div className="mdl-dialog__actions">
-               <button type="button" 
-                       className="mdl-button"
-                       onClick={this.delete.bind(this)}>Delete</button>
-               <button type="button" 
-                       className="mdl-button"
-                       onClick={this.cancel.bind(this)}>Cancel</button>
-           </div>
-         </dialog>
-         <button className="mdl-button mdl-js-button mdl-button--icon"
-                 onClick={this.confirm.bind(this)}>
-            <i className="material-icons">delete</i>
-         </button>
-      </span>)
-   }
-}
-
-class EnableUserToggle extends React.Component {
-
-   constructor(props) {
-      super(props);
-      this.toggleId = this.props.user.entry.id + "_enabledToggle";
-   }
-
-   onToggle(event) {
-      axios.put(`/api/-default-/public/alfresco/versions/1/people/${this.props.user.entry.id}`, {
-         enabled: this.refs.toggle.checked
-      })
-         .then(response => {
-            if (response.status === 200)
-            {
-               var changeEvent = new CustomEvent(collectionEvents.ITEM_UPDATED, {
-                  bubbles: true
-               });
-               this.refs.toggle.dispatchEvent(changeEvent);
-            }
-         })
-   }
-
-   componentDidUpdate(prevProps, prevStat) {
-      // NOTE: This was required to ensure rendering was correct, ideally this should not be necessary
-      if (this.props.user.entry.enabled)
-      {
-         this.refs.componentNode.classList.add("is-checked")
-      }
-      else
-      {
-         this.refs.componentNode.classList.remove("is-checked")
-      }
-   }
-
-   componentDidMount() {
-      window.componentHandler.upgradeElement(this.refs.componentNode);
-   }
-
-   render() {
-      return (
-         <label ref="componentNode" 
-                className="mdl-switch mdl-js-switch mdl-js-ripple-effect" 
-                htmlFor={this.toggleId}>
-            <input type="checkbox" 
-                   ref="toggle"
-                   id={this.toggleId} 
-                   className="mdl-switch__input" 
-                   checked={this.props.user.entry.enabled} 
-                   onChange={this.onToggle.bind(this)} />
-            <span className="mdl-switch__label"></span>
-         </label>
-      );
-   }
-}
-
-class TableHeading extends React.Component {
-
-   orderBy() {
-      var changeEvent = new CustomEvent(collectionEvents.REORDER, {
-         detail: {
-            orderBy: this.props.orderById
-         },
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
-   render() {
-      let sortIndicator = "";
-      if (this.props.orderById === this.props.orderBy)
-      {
-         let icon = this.props.orderDirection === "ASC" ? "arrow_upward" : "arrow_downward";
-         sortIndicator = <button className="mdl-button mdl-js-button mdl-button--icon">
-            <i className="material-icons">{icon}</i>
-         </button>
-      }
-      return (
-         <th ref="componentNode" className="mdl-data-table__cell--non-numeric" 
-             onClick={this.orderBy.bind(this)}>{sortIndicator}{this.props.label}</th>
-      );
-   }
-}
-
-
-
-class ListView extends React.Component {
-
-   render() {
-      return ( 
-         <table ref="componentNode" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-            <thead>
-               <tr>
-                  <TableHeading label="Name" 
-                                orderById="firstName"
-                                orderBy={this.props.orderBy}
-                                orderDirection={this.props.orderDirection} />
-                  <TableHeading label="User Name" 
-                                orderById="id"
-                                orderBy={this.props.orderBy}
-                                orderDirection={this.props.orderDirection} />
-                  <TableHeading label="E-Mail Address" 
-                                orderById="email"
-                                orderBy={this.props.orderBy}
-                                orderDirection={this.props.orderDirection} />
-                  <th className="mdl-data-table__cell--non-numeric">Enabled</th>
-                  <th className="mdl-data-table__cell--non-numeric">Actions</th>
-               </tr>
-            </thead>
-            <tbody>{this.props.list.entries.map((entry) => 
-               <tr key={entry.entry.id}>
-                  <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)}>{entry.entry.firstName} {entry.entry.lastName}</td>
-                  <td className="mdl-data-table__cell--non-numeric">{entry.entry.id}</td>
-                  <td className="mdl-data-table__cell--non-numeric">{entry.entry.email}</td>
-                  <td className="mdl-data-table__cell--non-numeric">
-                     <EnableUserToggle user={entry} />
-                  </td>
-                  <td className="mdl-data-table__cell--non-numeric">
-                     <DeleteUserButton user={entry} />
-                  </td>
-               </tr>
-            )}</tbody>
-            <tfoot>
-               <tr>
-                  <td colSpan="5">
-                     <PaginationControls list={this.props.list}/>
-                  </td>
-               </tr>
-            </tfoot>
-         </table>);
-   }
-}
 
 class Filter extends React.Component {
 
@@ -230,8 +32,6 @@ class Filter extends React.Component {
       );
    }
 }
- 
-
 
 class TextField extends React.Component {
 
@@ -373,87 +173,8 @@ class CreateUserButton extends React.Component {
    }
 }
 
-class PaginationControls extends React.Component {
-
-   pageBack() {
-      let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
-   pageForward() {
-      let changeEvent = new CustomEvent(collectionEvents.PAGE_FORWARDS, {
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
-   updateMaxItems(maxItems) {
-      let changeEvent = new CustomEvent(collectionEvents.UPDATE_MAX_ITEMS, {
-         detail: maxItems,
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
-   render() {
-      return (<div ref="componentNode">
-         
-         <span>Results per page:</span>
-
-         <span>{this.props.list.pagination.maxItems}</span>
-
-         <button id="paginationItemsPerPage"
-                 className="mdl-button mdl-js-button mdl-button--icon" 
-                 onClick={this.pageBack.bind(this)}>
-            <i className="material-icons">arrow_drop_down</i>
-         </button>
-
-         <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-             htmlFor="paginationItemsPerPage">
-            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(5)}>5</li>
-            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(10)}>10</li>
-            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(20)}>20</li>
-            <li className="mdl-menu__item" onClick={() => this.updateMaxItems(50)}>50</li>
-         </ul>
-
-         <span>{this.props.list.pagination.skipCount + 1} - {this.props.list.pagination.skipCount + this.props.list.pagination.maxItems} of {this.props.list.pagination.totalItems}</span>
-
-         <button className="mdl-button mdl-js-button mdl-button--icon" 
-                 disabled={this.props.list.pagination.skipCount ? false : true} 
-                 onClick={this.pageBack.bind(this)}>
-            <i className="material-icons">keyboard_arrow_left</i>
-         </button>
-
-         <button className="mdl-button mdl-js-button mdl-button--icon" 
-                 disabled={this.props.list.pagination.hasMoreItems ? false : true} 
-                 onClick={this.pageForward.bind(this)}>
-            <i className="material-icons">keyboard_arrow_right</i>
-         </button>
-      </div>)
-   }
-}
 
 
-class Toolbar extends React.Component {
-
-   render() {
-      return ( <span>
-                  <CreateUserButton/>
-               </span>)
-   }
-}
-
-
-/*<Toolbar list={this.props.list} 
-                        pageBackHandler={this.pageBack}
-                        pageForwardHandler={this.pageForward}></Toolbar>
-                        <Filter />
-               <ListView list={this.state.list}
-                         navigationHandler={this.navigate}
-                         orderBy={this.state.orderBy}
-                         orderDirection={this.state.orderDirection}></ListView>*/
 
 
 const Home = React.createClass({
@@ -461,10 +182,13 @@ const Home = React.createClass({
    render() {
       return (
          <div>
-            <Collection>
+            <Collection skipCount={0}
+                        maxItems={10}
+                        orderBy="firstName"
+                        orderDirection="DESC">
                <CreateUserButton/>
                <Filter />
-               <ListView></ListView>
+               <UserTableView />
             </Collection>
          </div>
       )

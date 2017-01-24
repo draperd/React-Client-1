@@ -17,12 +17,15 @@ class Collection extends React.Component {
    constructor(props) {
       super(props);
 
+      this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
+      this.filterUrl = props.filterUrl || "/api/-default-/public/alfresco/versions/1/queries/people";
+
       this.state = {
-         skipCount: 0,
-         maxItems: 5,
-         relativePath: "/",
-         orderBy: "firstName",
-         orderDirection: "ASC",
+         skipCount: props.skipCount || 0,
+         maxItems: props.maxItems || 5,
+         relativePath: props.relativePath || "/",
+         orderBy: props.orderBy || "id",
+         orderDirection: props.orderDirection === "DESC" ? "DESC" : "ASC",
          list: {
             entries: [],
             pagination: {
@@ -59,7 +62,7 @@ class Collection extends React.Component {
             skipCount: 0,
             orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
          }, () => {
-            let url = `/api/-default-/public/alfresco/versions/1/queries/people?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
             axios.get(url)
                .then(response => {
                   this.setState({list: response.data.list});
@@ -119,7 +122,7 @@ class Collection extends React.Component {
 
    getData() {
 
-      let url = `/api/-default-/public/alfresco/versions/1/people?skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+      let url = `${this.url}?skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
       axios.get(url)
          .then(response => {
             this.setState({list: response.data.list});
@@ -140,11 +143,11 @@ class Collection extends React.Component {
 
    setRelativePath(relativePath) {
       this.setState({
-            skipCount: 0,
-            relativePath: relativePath
-         }, () => {
-            this.getData();
-         });
+         skipCount: 0,
+         relativePath: relativePath
+      }, () => {
+         this.getData();
+      });
    }
 
    render() {
