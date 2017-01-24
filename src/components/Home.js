@@ -4,6 +4,12 @@ import axios from "axios";
 import Collection from "./containers/Collection";
 import { collectionEvents } from "./containers/Collection";
 
+import Pagination from "./controls/Pagination";
+
+import TableCell from "./renderers/TableCell";
+import TableHeading from "./renderers/TableHeading";
+
+import TableView from "./views/TableView";
 import UserTableView from "./views/UserTableView";
 
 
@@ -189,6 +195,21 @@ const Home = React.createClass({
                <CreateUserButton/>
                <Filter />
                <UserTableView />
+            </Collection>
+
+            <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" >
+               <TableView 
+                  headerChildren={
+                     <TableHeading label="Name" />
+                  }
+                  bodyChildren={
+                     <TableCell property="name" />
+                  }
+                  footerChildren={
+                     <Pagination />
+                  }
+               >
+               </TableView>
             </Collection>
          </div>
       )

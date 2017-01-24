@@ -35,7 +35,7 @@ class UserTableView extends React.Component {
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.id}</td>
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.email}</td>
                   <td className="mdl-data-table__cell--non-numeric">
-                     <Toggle user={entry}
+                     <Toggle item={entry}
                              url="/api/-default-/public/alfresco/versions/1/people" />
                   </td>
                   <td className="mdl-data-table__cell--non-numeric">
@@ -46,9 +46,7 @@ class UserTableView extends React.Component {
             )}</tbody>
             <tfoot>
                <tr>
-                  <td colSpan="5">
-                     <Pagination list={this.props.list}/>
-                  </td>
+                  <Pagination colspan="5" list={this.props.list}/>
                </tr>
             </tfoot>
          </table>);

@@ -3,6 +3,11 @@ import { collectionEvents } from "../containers/Collection";
 
 class Pagination extends React.Component {
 
+   constructor(props) {
+      super(props);
+      this.colspan = props.colspan || 1;
+   }
+
    pageBack() {
       let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
          bubbles: true
@@ -26,7 +31,7 @@ class Pagination extends React.Component {
    }
 
    render() {
-      return (<div ref="componentNode">
+      return (<td colSpan={this.colspan} ref="componentNode">
          
          <span>Results per page:</span>
 
@@ -59,7 +64,7 @@ class Pagination extends React.Component {
                  onClick={this.pageForward.bind(this)}>
             <i className="material-icons">keyboard_arrow_right</i>
          </button>
-      </div>)
+      </td>)
    }
 }
 
