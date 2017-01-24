@@ -31,7 +31,7 @@ class UserTableView extends React.Component {
             </thead>
             <tbody>{this.props.list.entries.map((entry) => 
                <tr key={entry.entry.id}>
-                  <td className="mdl-data-table__cell--non-numeric" onClick={() => this.props.navigationHandler(entry)}>{entry.entry.firstName} {entry.entry.lastName}</td>
+                  <td className="mdl-data-table__cell--non-numeric">{entry.entry.firstName} {entry.entry.lastName}</td>
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.id}</td>
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.email}</td>
                   <td className="mdl-data-table__cell--non-numeric">
