@@ -6,7 +6,6 @@ import Delete from "../renderers/Delete";
 import TableHeading from "../renderers/TableHeading";
 import Toggle from "../renderers/Toggle";
 
-
 class UserTableView extends React.Component {
 
    render() {
@@ -36,10 +35,12 @@ class UserTableView extends React.Component {
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.id}</td>
                   <td className="mdl-data-table__cell--non-numeric">{entry.entry.email}</td>
                   <td className="mdl-data-table__cell--non-numeric">
-                     <Toggle user={entry} />
+                     <Toggle user={entry}
+                             url="/api/-default-/public/alfresco/versions/1/people" />
                   </td>
                   <td className="mdl-data-table__cell--non-numeric">
-                     <Delete user={entry} />
+                     <Delete item={entry}
+                             url="/api/-default-/public/alfresco/versions/1/people" />
                   </td>
                </tr>
             )}</tbody>

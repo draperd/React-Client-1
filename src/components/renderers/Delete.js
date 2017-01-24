@@ -8,8 +8,13 @@ const DeleteUserButtonStyles = {
    }
 };
 
-
 class Delete extends React.Component {
+
+   constructor(props) {
+      super(props);
+
+      this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
+   }
 
    confirm() {
       this.refs.dialog.showModal();
@@ -20,7 +25,7 @@ class Delete extends React.Component {
    }
 
    delete() {
-      axios.delete(`/api/-default-/public/alfresco/versions/1/people/{this.props.user.entry.id}`)
+      axios.delete(`${this.url}/{this.props.item.entry.id}`)
          .then(response => {
             if (response.status === 200)
             {
@@ -40,17 +45,17 @@ class Delete extends React.Component {
 
    handleFormChange(value) {
       this.setState({
-         user: value
+         item: value
       });
    }
 
    render() {
       return (<span ref="componentNode">
          <dialog ref="dialog" className="mdl-dialog">
-            <h3 className="mdl-dialog__title">Delete {this.props.user.entry.firstName} {this.props.user.entry.lastName}</h3>
+            <h3 className="mdl-dialog__title">Delete {this.props.item.entry.firstName} {this.props.item.entry.lastName}</h3>
             <div className="mdl-dialog__content" style={DeleteUserButtonStyles.dialogContent}>
-               <p>Are you sure you want to delete {this.props.user.entry.firstName} {this.props.user.entry.lastName}</p>
-               <p>Deleting a user does not remove their permissions from the repository. These permissions will be reused if the user is recreated later. You can also disable the user account.</p>
+               <p>Are you sure you want to delete {this.props.item.entry.firstName} {this.props.item.entry.lastName}</p>
+               <p>Deleting a item does not remove their permissions from the repository. These permissions will be reused if the item is recreated later. You can also disable the item account.</p>
             </div>
             <div className="mdl-dialog__actions">
                <button type="button" 

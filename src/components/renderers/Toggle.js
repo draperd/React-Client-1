@@ -6,11 +6,12 @@ class Toggle extends React.Component {
 
    constructor(props) {
       super(props);
+      this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
       this.toggleId = this.props.user.entry.id + "_enabledToggle";
    }
 
    onToggle() {
-      axios.put(`/api/-default-/public/alfresco/versions/1/people/${this.props.user.entry.id}`, {
+      axios.put(`${this.url}/${this.props.user.entry.id}`, {
          enabled: this.refs.toggle.checked
       })
          .then(response => {
