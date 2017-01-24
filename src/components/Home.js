@@ -1,15 +1,9 @@
 import React from "react";
 import axios from "axios";
 
-const customEvents = {
-   ITEM_CREATED: "itemCreated",
-   PAGE_FORWARDS: "pageForward",
-   PAGE_BACKWARDS: "pageBackward",
-   UPDATE_MAX_ITEMS: "updateMaxItems",
-   ITEM_UPDATED: "itemUpdate",
-   REORDER: "reorderItems",
-   FILTER: "filterItems"
-};
+import Collection from "./containers/Collection";
+import { collectionEvents } from "./containers/Collection";
+
 
 
 const DeleteUserButtonStyles = {
@@ -35,7 +29,7 @@ class DeleteUserButton extends React.Component {
             if (response.status === 200)
             {
                this.refs.dialog.close();
-               var changeEvent = new CustomEvent(customEvents.ITEM_CREATED, {
+               var changeEvent = new CustomEvent(collectionEvents.ITEM_CREATED, {
                   // detail: response
                   bubbles: true
                });
@@ -93,7 +87,7 @@ class EnableUserToggle extends React.Component {
          .then(response => {
             if (response.status === 200)
             {
-               var changeEvent = new CustomEvent(customEvents.ITEM_UPDATED, {
+               var changeEvent = new CustomEvent(collectionEvents.ITEM_UPDATED, {
                   bubbles: true
                });
                this.refs.toggle.dispatchEvent(changeEvent);
@@ -137,7 +131,7 @@ class EnableUserToggle extends React.Component {
 class TableHeading extends React.Component {
 
    orderBy() {
-      var changeEvent = new CustomEvent(customEvents.REORDER, {
+      var changeEvent = new CustomEvent(collectionEvents.REORDER, {
          detail: {
             orderBy: this.props.orderById
          },
@@ -214,7 +208,7 @@ class ListView extends React.Component {
 class Filter extends React.Component {
 
    onChange(event) {
-      var changeEvent = new CustomEvent(customEvents.FILTER, {
+      var changeEvent = new CustomEvent(collectionEvents.FILTER, {
          detail: {
             term: event.target.value
          },
@@ -237,155 +231,7 @@ class Filter extends React.Component {
    }
 }
  
-class List extends React.Component {
 
-   constructor(props) {
-      super(props);
-
-      this.state = {
-         skipCount: 0,
-         maxItems: 5,
-         relativePath: "/",
-         orderBy: "firstName",
-         orderDirection: "ASC",
-         list: {
-            entries: [],
-            pagination: {
-               skipCount: 0,
-               maxItems: 5
-            }
-         }
-      };
-
-      this.navigate = this.navigate.bind(this);
-      this.setRelativePath = this.setRelativePath.bind(this);
-   }
-
-   componentWillMount() {
-      this.getData();
-   }
-
-   componentDidMount() {
-      this.refs.list.addEventListener(customEvents.ITEM_CREATED, this.getData.bind(this));
-      this.refs.list.addEventListener(customEvents.ITEM_UPDATED, this.getData.bind(this));
-      this.refs.list.addEventListener(customEvents.PAGE_BACKWARDS, this.pageBack.bind(this));
-      this.refs.list.addEventListener(customEvents.PAGE_FORWARDS, this.pageForward.bind(this));
-      this.refs.list.addEventListener(customEvents.UPDATE_MAX_ITEMS, this.updateMaxItems.bind(this));
-      this.refs.list.addEventListener(customEvents.REORDER, this.reorderItems.bind(this));
-      this.refs.list.addEventListener(customEvents.FILTER, this.filterItems.bind(this));
-
-      window.componentHandler.upgradeElement(this.refs.list);
-   }
-
-   filterItems(event) {
-      if (event && event.detail && event.detail.term && event.detail.term.length > 1)
-      {
-         this.setState({
-            skipCount: 0,
-            orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
-         }, () => {
-            let url = `/api/-default-/public/alfresco/versions/1/queries/people?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
-            axios.get(url)
-               .then(response => {
-                  this.setState({list: response.data.list});
-               });
-         });
-      }
-      else
-      {
-         this.getData();
-      }
-   }
-
-   reorderItems(evt) {
-      if (evt && evt.detail.orderBy)
-      {
-         this.setState({
-            orderBy: evt.detail.orderBy,
-            orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
-         }, () => {
-            this.getData();
-         });
-      }
-   }
-
-   updateMaxItems(evt) {
-      if (evt && evt.detail)
-      {
-         this.setState({
-            maxItems: evt.detail
-         }, () => {
-            this.getData();
-         });
-      }
-   }
-
-   pageBack() {
-      if (this.state.list.pagination.skipCount)
-      {
-         this.setState({
-            skipCount: this.state.skipCount - this.state.maxItems
-         }, () => {
-            this.getData();
-         });
-      }
-   }
-
-   pageForward() {
-      if (this.state.list.pagination.hasMoreItems)
-      {
-         this.setState({
-            skipCount: this.state.skipCount + this.state.maxItems
-         }, () => {
-            this.getData();
-         });
-      }
-   }
-
-   getData() {
-
-      let url = `/api/-default-/public/alfresco/versions/1/people?skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
-      axios.get(url)
-         .then(response => {
-            this.setState({list: response.data.list});
-         });
-   }
-
-   navigate(item) {
-      if (item.entry.isFolder)
-      {
-         this.setState({
-            skipCount: 0,
-            relativePath: `${this.state.relativePath}${item.entry.name}/`
-         }, () => {
-            this.getData();
-         });
-      }
-   }
-
-   setRelativePath(relativePath) {
-      this.setState({
-            skipCount: 0,
-            relativePath: relativePath
-         }, () => {
-            this.getData();
-         });
-   }
-
-   render() {
-      return (
-         <div ref="list" >
-            <Toolbar list={this.state.list} 
-                     pageBackHandler={this.pageBack}
-                     pageForwardHandler={this.pageForward}></Toolbar>
-            <Filter />
-            <ListView list={this.state.list}
-                      navigationHandler={this.navigate}
-                      orderBy={this.state.orderBy}
-                      orderDirection={this.state.orderDirection}></ListView>
-         </div>)
-   }
-}
 
 class TextField extends React.Component {
 
@@ -434,7 +280,7 @@ class CreateUserForm extends React.Component {
 
             <TextField id="new_user_lastName"
                        name="lastName"
-                       value={this.props.user.firstName}
+                       value={this.props.user.lastName}
                        onChange={this.handleChange} 
                        label="Last Name"/>
 
@@ -464,6 +310,7 @@ class CreateUserButton extends React.Component {
          user: {
             id: "",
             firstName: "",
+            lastName: "",
             email: "",
             password: ""
          }
@@ -484,7 +331,7 @@ class CreateUserButton extends React.Component {
             if (response.status === 201)
             {
                this.refs.dialog.close();
-               var changeEvent = new CustomEvent(customEvents.ITEM_CREATED, {
+               var changeEvent = new CustomEvent(collectionEvents.ITEM_CREATED, {
                   // detail: response
                   bubbles: true
                });
@@ -529,21 +376,21 @@ class CreateUserButton extends React.Component {
 class PaginationControls extends React.Component {
 
    pageBack() {
-      let changeEvent = new CustomEvent(customEvents.PAGE_BACKWARDS, {
+      let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
          bubbles: true
       });
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
    pageForward() {
-      let changeEvent = new CustomEvent(customEvents.PAGE_FORWARDS, {
+      let changeEvent = new CustomEvent(collectionEvents.PAGE_FORWARDS, {
          bubbles: true
       });
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
    updateMaxItems(maxItems) {
-      let changeEvent = new CustomEvent(customEvents.UPDATE_MAX_ITEMS, {
+      let changeEvent = new CustomEvent(collectionEvents.UPDATE_MAX_ITEMS, {
          detail: maxItems,
          bubbles: true
       });
@@ -598,12 +445,27 @@ class Toolbar extends React.Component {
    }
 }
 
+
+/*<Toolbar list={this.props.list} 
+                        pageBackHandler={this.pageBack}
+                        pageForwardHandler={this.pageForward}></Toolbar>
+                        <Filter />
+               <ListView list={this.state.list}
+                         navigationHandler={this.navigate}
+                         orderBy={this.state.orderBy}
+                         orderDirection={this.state.orderDirection}></ListView>*/
+
+
 const Home = React.createClass({
 
    render() {
       return (
          <div>
-            <List></List>
+            <Collection>
+               <CreateUserButton/>
+               <Filter />
+               <ListView></ListView>
+            </Collection>
          </div>
       )
    }
