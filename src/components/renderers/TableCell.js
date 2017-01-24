@@ -1,5 +1,6 @@
 import React from "react";
 import { get } from "lodash";
+import { collectionEvents } from "../containers/Collection";
 
 class TableCell extends React.Component {
 
@@ -7,10 +8,24 @@ class TableCell extends React.Component {
       super(props);
       this.property = props.property || "id";
    }
+
+   navigate() {
+      let changeEvent = new CustomEvent(collectionEvents.NAVIGATE, {
+         detail: this.props.item,
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
    render() {
-      var renderedProperty = get(this.props.item.entry, this.property, "");
+      let renderedProperty = get(this.props.item.entry, this.property, "");
+      if (this.props.navigation)
+      {
+         renderedProperty = (<span role="link" onClick={this.navigate.bind(this)}>{renderedProperty}</span>);
+      }
+
       return (
-         <td className="mdl-data-table__cell--non-numeric">{renderedProperty}</td>
+         <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{renderedProperty}</td>
       );
    }
 }

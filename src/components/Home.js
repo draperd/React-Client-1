@@ -191,14 +191,17 @@ const Home = React.createClass({
                <UserTableView />
             </Collection>
 
-            <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" >
+            <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" 
+                        orderBy="name">
                <TableView 
                   headerChildren={
-                     [<TableHeading label="Name" />,
-                      <TableHeading label="Created By" />]
+                     [<TableHeading label="Name"
+                                    orderById="name" />,
+                      <TableHeading label="Created By"
+                                    orderById="createdByUser.displayName" />]
                   }
                   bodyChildren={
-                     [<TableCell property="name" />,
+                     [<TableCell property="name" navigation={true}/>,
                       <TableCell property="createdByUser.displayName" />]
                   }
                   footerChildren={

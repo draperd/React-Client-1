@@ -8,7 +8,8 @@ const collectionEvents = {
    UPDATE_MAX_ITEMS: "updateMaxItems",
    ITEM_UPDATED: "itemUpdate",
    REORDER: "reorderItems",
-   FILTER: "filterItems"
+   FILTER: "filterItems",
+   NAVIGATE: "navigate"
 };
 export { collectionEvents };
 
@@ -51,6 +52,7 @@ class Collection extends React.Component {
       this.refs.list.addEventListener(collectionEvents.UPDATE_MAX_ITEMS, this.updateMaxItems.bind(this));
       this.refs.list.addEventListener(collectionEvents.REORDER, this.reorderItems.bind(this));
       this.refs.list.addEventListener(collectionEvents.FILTER, this.filterItems.bind(this));
+      this.refs.list.addEventListener(collectionEvents.NAVIGATE, this.navigate.bind(this));
 
       window.componentHandler.upgradeElement(this.refs.list);
    }
@@ -122,19 +124,19 @@ class Collection extends React.Component {
 
    getData() {
 
-      let url = `${this.url}?skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
       axios.get(url)
          .then(response => {
             this.setState({list: response.data.list});
          });
    }
 
-   navigate(item) {
-      if (item.entry.isFolder)
+   navigate(event) {
+      if (event && event.detail && event.detail.entry.isFolder)
       {
          this.setState({
             skipCount: 0,
-            relativePath: `${this.state.relativePath}${item.entry.name}/`
+            relativePath: `${this.state.relativePath}${event.detail.entry.name}/`
          }, () => {
             this.getData();
          });
