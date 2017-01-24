@@ -12,6 +12,9 @@ import TableCell from "./renderers/TableCell";
 import TableHeading from "./renderers/TableHeading";
 
 import TableView from "./views/TableView";
+import TableViewHead from "./views/TableViewHead";
+import TableViewBody from "./views/TableViewBody";
+import TableViewFoot from "./views/TableViewFoot";
 import UserTableView from "./views/UserTableView";
 
 class Filter extends React.Component {
@@ -195,22 +198,25 @@ const Home = React.createClass({
 
             <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" 
                         orderBy="name">
+               
                <BreadcrumbTrail/>
-               <TableView 
-                  headerChildren={
-                     [<TableHeading label="Name"
-                                    orderById="name" />,
-                      <TableHeading label="Created By"
-                                    orderById="createdByUser.displayName" />]
-                  }
-                  bodyChildren={
-                     [<TableCell property="name" navigation={true}/>,
-                      <TableCell property="createdByUser.displayName" />]
-                  }
-                  footerChildren={
+               
+               <TableView>
+
+                  <TableViewHead> 
+                     <TableHeading label="Name" orderById="name" />
+                     <TableHeading label="Created By" orderById="createdByUser.displayName" />
+                  </TableViewHead>
+
+                  <TableViewBody>
+                     <TableCell property="name" navigation={true} />
+                     <TableCell property="createdByUser.displayName" />
+                  </TableViewBody>
+                  
+                  <TableViewFoot>
                      <Pagination colspan="2"/>
-                  }
-               >
+                  </TableViewFoot>
+
                </TableView>
             </Collection>
          </div>
