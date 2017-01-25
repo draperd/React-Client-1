@@ -1,5 +1,5 @@
 import React from "react";
-const auth = require("alfresco-js-utils/dist/Authentication");
+import auth from "../utilities/Authentication";
 require("material-design-lite");
 
 import BaseLayout from "./layouts/BaseLayout";

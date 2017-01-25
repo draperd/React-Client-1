@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
-import { Authentication as auth } from "alfresco-js-utils/src/Authentication";
-
+import auth from "../utilities/Authentication";
 
 const Login = withRouter(
   React.createClass({
@@ -32,7 +31,7 @@ const Login = withRouter(
             } 
             else 
             {
-               this.props.router.replace('/')
+               this.props.router.replace('/nodes')
             }
          }
       });

@@ -1,5 +1,7 @@
 import React from "react";
 
+import LogoutButton from "../components/buttons/Logout";
+
 import Layout from "../components/layouts/Layout";
 import Header from "../components/layouts/Header";
 import Drawer from "../components/layouts/Drawer";
@@ -11,9 +13,7 @@ const Users = React.createClass({
          <Layout>
             <Header title="Alfresco Administration Console">
                <div className="mdl-layout-spacer"></div>
-               <button className="mdl-button mdl-js-button mdl-button--icon">
-                 <i className="material-icons">exit_to_app</i>
-               </button>
+               <LogoutButton />
             </Header>
          
             <Drawer title="Links">
