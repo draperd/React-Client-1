@@ -1,6 +1,6 @@
 import React from "react";
 import { collectionEvents } from "../containers/Collection";
-import BreadcrumbUtil from "alfresco-js-utils/lib/utils/navigation/Breadcrumbs";
+const BreadcrumbUtil = require("alfresco-js-utils/dist/utils/navigation/Breadcrumbs");
 
 class BreadcrumbTrail extends React.Component {
 

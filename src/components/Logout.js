@@ -1,5 +1,5 @@
 import React from "react";
-import auth from "alfresco-js-utils/lib/Authentication";
+const auth = require("alfresco-js-utils/dist/Authentication");
 
 const Logout = React.createClass({
    componentDidMount() {

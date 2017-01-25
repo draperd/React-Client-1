@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
-import auth from "alfresco-js-utils/lib/Authentication";
+import { Authentication as auth } from "alfresco-js-utils/src/Authentication";
 
 
 const Login = withRouter(
