@@ -1,4 +1,5 @@
 import React from "react";
+import { collectionEvents } from "../containers/Collection";
 
 const CarouselStyle = {
    frame: {
@@ -19,11 +20,30 @@ const CarouselStyle = {
 
 class Carousel extends React.Component {
 
+   pageBack() {
+      let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
+   pageForward() {
+      let changeEvent = new CustomEvent(collectionEvents.PAGE_FORWARDS, {
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
+
    next() {
       let nextLeft = ((parseInt(this.refs.carousel.style.left, 10) / 100) - 1) * 100;
-      if (nextLeft > (this.props.list.pagination.maxItems -1) * -100)
+      if (nextLeft > (this.props.list.pagination.count) * -100)
       {
          this.refs.carousel.style.left = nextLeft + "%";
+      }
+      else if (this.props.list.pagination.hasMoreItems)
+      {
+         this.pageForward();
+         this.refs.carousel.style.left = "0%";
       }
    }
 
@@ -32,6 +52,11 @@ class Carousel extends React.Component {
       if (nextLeft <= 0)
       {
          this.refs.carousel.style.left = nextLeft + "%";
+      }
+      else if (this.props.list.pagination.skipCount)
+      {
+         this.pageBack();
+         this.refs.carousel.style.left = ((this.props.list.pagination.maxItems -1) * -100) + "%" ;
       }
    }
 
@@ -48,7 +73,7 @@ class Carousel extends React.Component {
       });
 
       return ( 
-         <div>
+         <div ref="componentNode">
             <div style={CarouselStyle.frame}>
                <ul ref="carousel" style={CarouselStyle.carousel}>
                   {body}
