@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { collectionEvents } from "../containers/Collection";
 import CreateUserForm from "../forms/CreateUserForm";
+import auth from "../../utilities/Authentication";
 
 class CreateUserButton extends React.Component {
 
@@ -27,7 +28,7 @@ class CreateUserButton extends React.Component {
    }
 
    create() {
-      axios.post("/api/-default-/public/alfresco/versions/1/people", this.state.user)
+      axios.post("/api/-default-/public/alfresco/versions/1/people", this.state.user, auth.getAxiosConfig())
          .then(response => {
             if (response.status === 201)
             {

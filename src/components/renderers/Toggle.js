@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { collectionEvents } from "../containers/Collection";
+import auth from "../../utilities/Authentication";
 
 class Toggle extends React.Component {
 
@@ -13,7 +14,7 @@ class Toggle extends React.Component {
    onToggle() {
       axios.put(`${this.url}/${this.props.item.entry.id}`, {
          enabled: this.refs.toggle.checked
-      })
+      }, auth.getAxiosConfig())
          .then(response => {
             if (response.status === 200)
             {

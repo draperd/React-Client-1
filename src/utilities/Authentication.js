@@ -54,5 +54,11 @@ export default {
       return !!localStorage.ticket;
    },
 
+   getAxiosConfig() {
+      return {
+         headers: { authorization: "Basic " + btoa(localStorage.ticket) }
+      };
+   },
+
    onChange() {}
 };

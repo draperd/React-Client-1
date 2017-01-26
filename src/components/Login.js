@@ -5,7 +5,11 @@ import auth from "../utilities/Authentication";
 const Login = withRouter(
   React.createClass({
 
-    getInitialState() {
+   componentDidMount() {
+      window.componentHandler.upgradeElement(this.refs.componentNode);
+   },
+
+   getInitialState() {
       return {
         error: false
       }
@@ -39,14 +43,37 @@ const Login = withRouter(
 
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
-          <label><input ref="username" placeholder="username" /></label>
-          <label><input ref="pass" placeholder="password" /></label><br />
-          <button type="submit">login</button>
-          {this.state.error && (
-            <p>Bad login information</p>
-          )}
-        </form>
+         <div ref="componentNode" className="mdl-layout mdl-js-layout">
+            <main className="mdl-layout__content">
+               <div className="mdl-card mdl-shadow--6dp">
+                  <form onSubmit={this.handleSubmit}>
+                     <div className="mdl-card__title mdl-color--primary mdl-color-text--white">
+                        <h2 className="mdl-card__title-text">Alfresco Administration Console</h2>
+                     </div>
+                     <div className="mdl-card__supporting-text">
+                           <div className="mdl-textfield mdl-js-textfield">
+                              <input ref="username" className="mdl-textfield__input" type="text" id="username" />
+                              <label className="mdl-textfield__label" htmlFor="username">Username</label>
+                           </div>
+                           <div className="mdl-textfield mdl-js-textfield">
+                              <input ref="pass" className="mdl-textfield__input" type="password" id="userpass" />
+                              <label className="mdl-textfield__label" htmlFor="userpass">Password</label>
+                           </div>
+                           { this.state.error && 
+                              (
+                                 <p>Bad login information</p>
+                              )
+                           }
+                     </div>
+                     <div className="mdl-card__actions mdl-card--border">
+                        <button type="submit" className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Log in</button>
+                     </div>
+                  </form>
+               </div>
+            </main>
+         </div>
+
+        
       )
     }
   })

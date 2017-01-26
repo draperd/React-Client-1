@@ -26,9 +26,9 @@ render((
    <Router history={browserHistory}>
       <Route path="login" component={Login} />
       <Route path="/" component={MainLayout} onEnter={requireAuth}>
-         <IndexRoute component={Nodes}  />
-         <Route path="nodes" component={Nodes}  />
-         <Route path="users" component={Users} />
+         <IndexRoute component={Nodes} onEnter={requireAuth} />
+         <Route path="nodes" component={Nodes} onEnter={requireAuth} />
+         <Route path="users" component={Users} onEnter={requireAuth} />
       </Route>
    </Router>
 ), document.getElementById('root'))
