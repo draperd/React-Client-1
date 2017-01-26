@@ -1,12 +1,11 @@
 import React from "react";
-import { browserHistory } from "react-router";
 import auth from "../../utilities/Authentication";
 
 class Logout extends React.Component {
 
    logout() {
       auth.logout();
-      browserHistory.push("/login");
+      this.context.router.push("/login");
    }
 
    render() {
@@ -18,5 +17,9 @@ class Logout extends React.Component {
       );
    }
 }
+
+Logout.contextTypes = {
+    router: React.PropTypes.object
+};
 
 export default Logout;

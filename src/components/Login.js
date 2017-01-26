@@ -24,14 +24,14 @@ const Login = withRouter(
          }
          else
          {
-            const { location } = this.props
+            const { location } = this.props;
             if (location.state && location.state.nextPathname) 
             {
-               this.props.router.replace(location.state.nextPathname)
+               this.props.router.replace(location.state.nextPathname);
             } 
             else 
             {
-               this.props.router.replace('/nodes')
+               this.props.router.replace('/nodes');
             }
          }
       });
@@ -41,7 +41,7 @@ const Login = withRouter(
       return (
         <form onSubmit={this.handleSubmit}>
           <label><input ref="username" placeholder="username" /></label>
-          <label><input ref="pass" placeholder="password" /></label> (hint: password1)<br />
+          <label><input ref="pass" placeholder="password" /></label><br />
           <button type="submit">login</button>
           {this.state.error && (
             <p>Bad login information</p>

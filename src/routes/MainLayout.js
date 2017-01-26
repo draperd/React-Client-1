@@ -6,11 +6,11 @@ import Layout from "../components/layouts/Layout";
 import Header from "../components/layouts/Header";
 import Drawer from "../components/layouts/Drawer";
 
-const Users = React.createClass({
+class MainLayout extends React.Component {
 
    render() {
       return (
-         <Layout>
+         <Layout ref="componentNode">
             <Header title="Alfresco Administration Console">
                <div className="mdl-layout-spacer"></div>
                <LogoutButton />
@@ -25,6 +25,6 @@ const Users = React.createClass({
          </Layout>
       )
    }
-})
+}
 
-export default Users;
+export default MainLayout;
