@@ -12,7 +12,8 @@ const Login = withRouter(
   React.createClass({
 
    componentDidMount() {
-      window.componentHandler.upgradeElement(this.refs.componentNode);
+      // window.componentHandler.upgradeElement(this.refs.componentNode);
+      window.componentHandler.upgradeDom();
    },
 
    getInitialState() {
