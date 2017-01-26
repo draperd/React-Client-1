@@ -29,15 +29,19 @@ const Users = React.createClass({
                      <TableViewHead> 
                         <TableHeading label="Name" orderById="name" />
                         <TableHeading label="Created By" orderById="createdByUser.displayName" />
+                        <TableHeading label="Created On" orderById="createdAt" />
+                        <TableHeading label="Is Folder"/>
                      </TableViewHead>
 
                      <TableViewBody>
                         <TableCell property="name" navigation={true} />
                         <TableCell property="createdByUser.displayName" />
+                        <TableCell property="createdAt" renderAs="DATE" />
+                        <TableCell property="isFolder" />
                      </TableViewBody>
                      
                      <TableViewFoot>
-                        <Pagination colspan="2"/>
+                        <Pagination colspan="4"/>
                      </TableViewFoot>
 
                   </TableView>
