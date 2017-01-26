@@ -64,7 +64,7 @@ class Collection extends React.Component {
             skipCount: 0,
             orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
          }, () => {
-            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}&include=${this.props.include}`;
             axios.get(url, auth.getAxiosConfig())
                .then(response => {
                   this.setState({list: response.data.list});
@@ -124,7 +124,7 @@ class Collection extends React.Component {
 
    getData() {
 
-      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}`;
+      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}&include=${this.props.include}`;
       axios.get(url, auth.getAxiosConfig())
          .then(response => {
             this.setState({list: response.data.list});

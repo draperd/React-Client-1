@@ -6,6 +6,7 @@ import BreadcrumbTrail from "../components/navigation/BreadcrumbTrail";
 
 import TableCell from "../components/renderers/TableCell";
 import TableHeading from "../components/renderers/TableHeading";
+import Thumbnail from "../components/renderers/Thumbnail";
 
 import TableView from "../components/views/TableView";
 import TableViewHead from "../components/views/TableViewHead";
@@ -20,13 +21,15 @@ const Users = React.createClass({
       return (
          <Content>
             <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" 
-                           orderBy="name">
+                        orderBy="name"
+                        include="properties">
                   
                   <BreadcrumbTrail/>
                   
                   <TableView>
 
                      <TableViewHead> 
+                        <TableHeading label="Thumbnail" />
                         <TableHeading label="Name" orderById="name" />
                         <TableHeading label="Created By" orderById="createdByUser.displayName" />
                         <TableHeading label="Created On" orderById="createdAt" />
@@ -34,6 +37,9 @@ const Users = React.createClass({
                      </TableViewHead>
 
                      <TableViewBody>
+                        <TableCell >
+                           <Thumbnail></Thumbnail>
+                        </TableCell>
                         <TableCell property="name" navigation={true} />
                         <TableCell property="createdByUser.displayName" />
                         <TableCell property="createdAt" renderAs="DATE" />
@@ -41,7 +47,7 @@ const Users = React.createClass({
                      </TableViewBody>
                      
                      <TableViewFoot>
-                        <Pagination colspan="4"/>
+                        <Pagination colspan="5"/>
                      </TableViewFoot>
 
                   </TableView>

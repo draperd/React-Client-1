@@ -6,7 +6,7 @@ class TableCell extends React.Component {
 
    constructor(props) {
       super(props);
-      this.property = props.property || "id";
+      this.property = props.property;
    }
 
    navigate() {
@@ -18,26 +18,41 @@ class TableCell extends React.Component {
    }
 
    render() {
-      let renderedProperty = get(this.props.item.entry, this.property, "");
-      if (typeof renderedProperty.toString === "function")
+      if (this.props.property)
       {
-         renderedProperty = renderedProperty.toString();
-      }
+         let renderedProperty = get(this.props.item.entry, this.property, "");
+         if (typeof renderedProperty.toString === "function")
+         {
+            renderedProperty = renderedProperty.toString();
+         }
 
-      if (this.props.renderAs === "DATE")
+         if (this.props.renderAs === "DATE")
+         {
+            var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+            renderedProperty = new Date(renderedProperty).toLocaleDateString("en-GB", options);
+         }
+
+         if (this.props.navigation)
+         {
+            renderedProperty = (<span role="link" onClick={this.navigate.bind(this)}>{renderedProperty}</span>);
+         }
+
+         return (
+            <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{renderedProperty}</td>
+         );
+      }
+      else
       {
-         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-         renderedProperty = new Date(renderedProperty).toLocaleDateString("en-GB", options);
+         const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
+            item: this.props.item
+         }));
+         return (
+            <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{childrenWithProps}</td>
+         );
       }
+       
 
-      if (this.props.navigation)
-      {
-         renderedProperty = (<span role="link" onClick={this.navigate.bind(this)}>{renderedProperty}</span>);
-      }
-
-      return (
-         <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{renderedProperty}</td>
-      );
+      
    }
 }
 
