@@ -2,6 +2,12 @@ import React from "react";
 import { withRouter } from "react-router";
 import auth from "../utilities/Authentication";
 
+const loginBoxStyle = {
+   display: "flex",
+   alignItems: "center",
+   justifyContent: "center"
+};
+
 const Login = withRouter(
   React.createClass({
 
@@ -44,7 +50,7 @@ const Login = withRouter(
     render() {
       return (
          <div ref="componentNode" className="mdl-layout mdl-js-layout">
-            <main className="mdl-layout__content">
+            <main style={loginBoxStyle} className="mdl-layout__content">
                <div className="mdl-card mdl-shadow--6dp">
                   <form onSubmit={this.handleSubmit}>
                      <div className="mdl-card__title mdl-color--primary mdl-color-text--white">
