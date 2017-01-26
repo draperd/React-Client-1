@@ -15,7 +15,7 @@ import TableViewFoot from "../components/views/TableViewFoot";
 
 import Content from "../components/layouts/Content";
 
-const Users = React.createClass({
+const Nodes = React.createClass({
 
    render() {
       return (
@@ -58,4 +58,4 @@ const Users = React.createClass({
    }
 })
 
-export default Users;
+export default Nodes;
