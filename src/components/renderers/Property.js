@@ -1,7 +1,16 @@
 import React from "react";
 import { get } from "lodash";
+import { collectionEvents } from "../containers/Collection";
 
 class Property extends React.Component {
+
+   navigate() {
+      let changeEvent = new CustomEvent(collectionEvents.NAVIGATE, {
+         detail: this.props.item,
+         bubbles: true
+      });
+      this.refs.componentNode.dispatchEvent(changeEvent);
+   }
 
    render() {
       
@@ -17,7 +26,12 @@ class Property extends React.Component {
          renderedProperty = new Date(renderedProperty).toLocaleDateString("en-GB", options);
       }
 
-      return (<span>{renderedProperty}</span>);
+      if (this.props.navigation)
+      {
+         renderedProperty = (<span role="link" onClick={this.navigate.bind(this)}>{renderedProperty}</span>);
+      }
+
+      return (<span ref="componentNode">{renderedProperty}</span>);
    }
 }
 

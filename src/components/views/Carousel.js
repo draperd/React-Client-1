@@ -11,7 +11,8 @@ const CarouselStyle = {
       margin: 0,
       padding: 0,
       position: "relative",
-      left: "0%"
+      left: "0%",
+      transition: "left .5s cubic-bezier(0, 1, .75, 1.01)"
    },
    carouselSeat: {
       flex: "1 0 100%"
@@ -19,6 +20,36 @@ const CarouselStyle = {
 };
 
 class Carousel extends React.Component {
+
+   constructor(props) {
+      super(props);
+      this.showLast = false;
+   }
+
+   componentDidMount() {
+      this.refs.componentNode.addEventListener(collectionEvents.ITEM_CREATED, this.resetCarousel.bind(this));
+      this.refs.componentNode.addEventListener(collectionEvents.ITEM_UPDATED, this.resetCarousel.bind(this));
+      this.refs.componentNode.addEventListener(collectionEvents.UPDATE_MAX_ITEMS, this.resetCarousel.bind(this));
+      this.refs.componentNode.addEventListener(collectionEvents.REORDER, this.resetCarousel.bind(this));
+      this.refs.componentNode.addEventListener(collectionEvents.FILTER, this.resetCarousel.bind(this));
+      this.refs.componentNode.addEventListener(collectionEvents.NAVIGATE, this.resetCarousel.bind(this));
+      this.refs.componentNode.addEventListener(collectionEvents.RELATIVE_PATH, this.resetCarousel.bind(this));
+   }
+
+   resetCarousel() {
+      this.showLast = false;
+   }
+
+   componentDidUpdate() {
+      if (!this.showLast)
+      {
+         this.refs.carousel.style.left = "0%";
+      }
+      else
+      {
+         this.refs.carousel.style.left = ((this.props.list.pagination.count -1) * -100) + "%" ;
+      }
+   }
 
    pageBack() {
       let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
@@ -42,8 +73,9 @@ class Carousel extends React.Component {
       }
       else if (this.props.list.pagination.hasMoreItems)
       {
+         this.showLast = false;
          this.pageForward();
-         this.refs.carousel.style.left = "0%";
+         // this.refs.carousel.style.left = "0%";
       }
    }
 
@@ -55,8 +87,8 @@ class Carousel extends React.Component {
       }
       else if (this.props.list.pagination.skipCount)
       {
+         this.showLast = true;
          this.pageBack();
-         this.refs.carousel.style.left = ((this.props.list.pagination.maxItems -1) * -100) + "%" ;
       }
    }
 

@@ -1,6 +1,8 @@
 import React from "react";
 import Collection from "../components/containers/Collection";
+import BreadcrumbTrail from "../components/navigation/BreadcrumbTrail";
 import Property from "../components/renderers/Property";
+import Thumbnail from "../components/renderers/Thumbnail";
 import Carousel from "../components/views/Carousel";
 import Content from "../components/layouts/Content";
 
@@ -13,8 +15,11 @@ const FilmStrip = React.createClass({
                         orderBy="name"
                         include="properties">
                   
+                  <BreadcrumbTrail/>
+
                   <Carousel>
-                     <Property property="name"></Property>
+                     <Property property="name" navigation={true}></Property>
+                     <Thumbnail></Thumbnail>
                   </Carousel>
                   
                </Collection>
