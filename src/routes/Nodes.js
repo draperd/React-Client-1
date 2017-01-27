@@ -40,7 +40,7 @@ const Nodes = React.createClass({
                         <TableCell >
                            <Thumbnail></Thumbnail>
                         </TableCell>
-                        <TableCell property="name" navigation={true} />
+                        <TableCell property="name" navigation={true} view={true}/>
                         <TableCell property="createdByUser.displayName" />
                         <TableCell property="createdAt" renderAs="DATE" />
                         <TableCell property="isFolder" />

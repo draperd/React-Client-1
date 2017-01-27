@@ -5,6 +5,7 @@ import { browserHistory } from "react-router";
 export default {
 
    onError(response) {
+      console.log("Caught error", response);
       if (response.status === 401)
       {
          auth.logout();

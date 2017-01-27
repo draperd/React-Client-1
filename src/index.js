@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import MainLayout from "./routes/MainLayout";
 import Users from "./routes/Users";
 import Nodes from "./routes/Nodes";
+import NodeDetails from "./routes/NodeDetails";
 import FilmStrip from "./routes/FilmStrip";
 
 import "material-design-lite/material.css";
@@ -31,6 +32,7 @@ render((
          <Route path="nodes" component={Nodes} onEnter={requireAuth} />
          <Route path="users" component={Users} onEnter={requireAuth} />
          <Route path="filmstrip" component={FilmStrip} onEnter={requireAuth} />
+         <Route path="node/:id" component={NodeDetails} onEnter={requireAuth} />
       </Route>
    </Router>
 ), document.getElementById('root'))

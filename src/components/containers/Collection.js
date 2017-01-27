@@ -52,8 +52,6 @@ class Collection extends React.Component {
       this.refs.list.addEventListener(collectionEvents.FILTER, this.filterItems.bind(this));
       this.refs.list.addEventListener(collectionEvents.NAVIGATE, this.navigate.bind(this));
       this.refs.list.addEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath.bind(this));
-
-      // window.componentHandler.upgradeElement(this.refs.list);
    }
 
    filterItems(event) {

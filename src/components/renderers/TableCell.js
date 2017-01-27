@@ -17,6 +17,10 @@ class TableCell extends React.Component {
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
+   view() {
+      this.context.router.push(`/node/${this.props.item.entry.id}`);
+   }
+
    render() {
       if (this.props.property)
       {
@@ -32,13 +36,12 @@ class TableCell extends React.Component {
             renderedProperty = new Date(renderedProperty).toLocaleDateString("en-GB", options);
          }
 
-         if (this.props.navigation)
-         {
-            renderedProperty = (<span role="link" onClick={this.navigate.bind(this)}>{renderedProperty}</span>);
-         }
-
          return (
-            <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{renderedProperty}</td>
+            <td ref="componentNode" 
+                className="mdl-data-table__cell--non-numeric"
+                onClick={ this.props.navigation ? this.navigate.bind(this) : "" }
+                onDoubleClick={ this.props.view ? this.view.bind(this) : "" }
+                >{renderedProperty}</td>
          );
       }
       else
@@ -50,10 +53,11 @@ class TableCell extends React.Component {
             <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{childrenWithProps}</td>
          );
       }
-       
-
-      
    }
 }
+
+TableCell.contextTypes = {
+    router: React.PropTypes.object
+};
 
 export default TableCell;
