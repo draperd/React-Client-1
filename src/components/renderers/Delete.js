@@ -1,7 +1,6 @@
 import React from "react";
-import axios from "axios";
+import xhr from "../../utilities/Xhr";
 import { collectionEvents } from "../containers/Collection";
-import auth from "../../utilities/Authentication";
 
 const DeleteUserButtonStyles = {
    dialogContent: {
@@ -26,7 +25,7 @@ class Delete extends React.Component {
    }
 
    delete() {
-      axios.delete(`${this.url}/{this.props.item.entry.id}`, auth.getAxiosConfig())
+      xhr.delete(`${this.url}/{this.props.item.entry.id}`)
          .then(response => {
             if (response.status === 200)
             {

@@ -33,6 +33,10 @@ export default {
                   this.onChange(false);
                   resolve(false);
                }
+            })
+            .catch(() => {
+               this.onChange(false);
+               resolve(false);
             });
          }
       });

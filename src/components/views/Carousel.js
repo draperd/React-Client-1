@@ -75,7 +75,6 @@ class Carousel extends React.Component {
       {
          this.showLast = false;
          this.pageForward();
-         // this.refs.carousel.style.left = "0%";
       }
    }
 
@@ -94,9 +93,11 @@ class Carousel extends React.Component {
 
    render() {
       let body = this.props.list.entries.map((entry) => {
-         const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
-            item: entry
-         }));
+         const childrenWithProps = React.Children.map(this.props.children, (child) => {
+            return React.cloneElement(child, {
+               item: entry
+            })
+         });
          return (
             <li style={CarouselStyle.carouselSeat} key={entry.entry.id}>
                {childrenWithProps}
@@ -116,7 +117,7 @@ class Carousel extends React.Component {
                <i className="material-icons">chevron_left</i>
             </button>
             <button className="mdl-button mdl-js-button mdl-button--icon"
-                 onClick={this.next.bind(this)}>
+                    onClick={this.next.bind(this)}>
                <i className="material-icons">chevron_right</i>
             </button>
          </div>
