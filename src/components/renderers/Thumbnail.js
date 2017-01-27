@@ -3,15 +3,6 @@ import { get } from "lodash";
 
 class Thumbnail extends React.Component {
 
-   componentWillReceiveProps(nextProps) {
-      console.info(nextProps);
-   }
-
-   shouldComponentUpdate(nextProps, nextState) {
-      console.info("Should component update", nextProps, nextState);
-      return true;
-   }
-
    render() {
 
       let thumbnail;
