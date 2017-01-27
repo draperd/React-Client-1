@@ -44,6 +44,9 @@ You can mix and match HTML and React components and any component should be nest
 
 If you need to add a component (very likely) then raise an issue with the use-case or simply add it and reference it.
 
+## What's Next?
+At the present time this project is simply and experiment to investigate a potential approach for building applications. None of the components will be stable and are subject to change. If this experiment meets with positive feedback then I will look to add JSDoc and tests and then publish the Components as an NPM package to be consumed in other React applications.
 
+If you have any feedback (good or bad) or if you'd like to contribute then please let me know!
 
 
