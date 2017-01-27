@@ -7,6 +7,11 @@ class Layout extends React.Component {
       window.componentHandler.upgradeDom();
    }
 
+   componentDidUpdate(prevProps, prevState) {
+      window.componentHandler.upgradeDom();
+   }
+
+
    render() {
       return (
          <div ref="componentNode" className="mdl-layout__container">
