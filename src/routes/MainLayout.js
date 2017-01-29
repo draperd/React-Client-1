@@ -1,3 +1,6 @@
+/**
+ * @module
+ */
 import React from "react";
 
 import LogoutButton from "../components/buttons/Logout";
@@ -6,8 +9,15 @@ import Layout from "../components/layouts/Layout";
 import Header from "../components/layouts/Header";
 import Drawer from "../components/layouts/Drawer";
 
+/**
+ * @class
+ */
 class MainLayout extends React.Component {
 
+   /**
+    *
+    * @instance
+    */
    render() {
       return (
          <Layout ref="componentNode">
