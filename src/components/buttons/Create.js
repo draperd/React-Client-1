@@ -1,9 +1,20 @@
+/**
+ * @module components/buttons/Create
+ */
 import React from "react";
 import xhr from "../../utilities/Xhr";
 import { collectionEvents } from "../containers/Collection";
 
+/**
+ * @class
+ */
 class Create extends React.Component {
 
+   /**
+    * 
+    * @instance
+    * @param  {object} props The instantiation properties
+    */
    constructor(props) {
       super(props);
 
@@ -15,14 +26,26 @@ class Create extends React.Component {
       };
    }
 
+   /**
+    * 
+    * @instance
+    */
    openDialog() {
       this.refs.dialog.showModal();
    }
 
+   /**
+    * 
+    * @instance
+    */
    cancel() {
       this.refs.dialog.close();
    }
 
+   /**
+    * 
+    * @instance
+    */
    create() {
       xhr.post(this.url, this.state.data)
          .then(response => {
@@ -41,12 +64,20 @@ class Create extends React.Component {
          });
    }
 
+   /**
+    * 
+    * @instance
+    */
    handleFormChange(value) {
       this.setState({
          data: value
       });
    }
 
+   /**
+    * 
+    * @instance
+    */
    render() {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          onChange: this.handleFormChange.bind(this),
