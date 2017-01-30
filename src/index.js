@@ -10,7 +10,7 @@ require("material-design-lite");
 import auth from "./utilities/Authentication";
 
 // This Component is used to handle user login...
-import Login from "./components/Login";
+import Login from "./routes/Login";
 
 // This Component provides the main layout for the application, this comprises of
 // the header and drawer. All other routers are nested within this layout to avoid
