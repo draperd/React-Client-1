@@ -16,7 +16,7 @@ const FilmStrip = React.createClass({
    render() {
       return (
          <Content>
-            <Collection url="/api/-default-/public/alfresco/versions/1/sites">
+            <Collection url="/api/-default-/public/alfresco/versions/1/sites" relations="containers,members">
                <TableView>
 
                      <TableViewHead> 

@@ -11,6 +11,7 @@ class Toolbar extends React.Component {
       //       be very useful.
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          list: this.props.list,
+         relations: this.props.relations,
          orderBy: this.props.orderBy,
          orderDirection: this.props.orderDirection,
          relativePath: this.props.relativePath

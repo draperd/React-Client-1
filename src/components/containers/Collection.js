@@ -46,7 +46,7 @@ export { collectionEvents };
  * @classdesc
  * <p>This component can be used to render the response from a call to a REST API that returns a list
  * of items. Any components that are nested as children of this component will automatically be assigned
- * list, orderBy, orderDirection and relativePath properties. Nested components can trigger changes in
+ * list, relations, orderBy, orderDirection and relativePath properties. Nested components can trigger changes in
  * state by emitting an event that will trigger the loading of new data and updated properties will be
  * cascaded through all the nested components to allow react rendering.</p>
  *
@@ -102,6 +102,7 @@ class Collection extends React.Component {
     * @param {string} [props.orderDirection="ASC"] The direction to initially order results in, must be either "ASC" or "DESC"
     * @param {string} [props.relativePath="/"] Any relative path to apply (applies when retrieving data from a hierarchy, e.g. Nodes)
     * @param {string} [props.include=""] Additional data to include in the retrieved data (see the API used for details of what is available)
+    * @param {string} [props.relations=""] Additional relations to include in the retrieved data (see the API used for details of what is available)
     */
    constructor(props) {
       super(props);
@@ -109,6 +110,7 @@ class Collection extends React.Component {
       this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
       this.filterUrl = props.filterUrl || "/api/-default-/public/alfresco/versions/1/queries/people";
       this.include = props.include ? `&include=${props.include}` : "";
+      this.relations = props.relations ? `&relations=${props.relations}` : "";
 
       this.state = {
          skipCount: props.skipCount || 0,
@@ -122,7 +124,8 @@ class Collection extends React.Component {
                skipCount: 0,
                maxItems: 5
             }
-         }
+         },
+         relations: {}
       };
    }
 
@@ -161,10 +164,13 @@ class Collection extends React.Component {
     * @instance
     */
    getData() {
-      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}`;
+      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}${this.relations}`;
       xhr.get(url)
          .then(response => {
-            this.setState({list: response.data.list});
+            this.setState({
+               list: response.data.list,
+               relations: response.data.relations || {}
+            });
          });
    }
 
@@ -185,7 +191,10 @@ class Collection extends React.Component {
             let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}`;
             xhr.get(url)
                .then(response => {
-                  this.setState({list: response.data.list});
+                  this.setState({
+                     list: response.data.list,
+                     relations: response.data.relations || {}
+                  });
                });
          });
       }
@@ -316,7 +325,7 @@ class Collection extends React.Component {
    }
 
    /**
-    * Updates the nested component children with properties for the list, orderBy, orderDirection and relativePath 
+    * Updates the nested component children with properties for the list, relations, orderBy, orderDirection and relativePath 
     * state attributes and then renders them.
     * 
     * @return {JSX}
@@ -324,6 +333,7 @@ class Collection extends React.Component {
    render() {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          list: this.state.list,
+         relations: this.state.relations,
          orderBy: this.state.orderBy,
          orderDirection: this.state.orderDirection,
          relativePath: this.state.relativePath

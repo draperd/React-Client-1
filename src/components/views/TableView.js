@@ -6,7 +6,8 @@ class TableView extends React.Component {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          orderBy: this.props.orderBy,
          orderDirection: this.props.orderDirection,
-         list: this.props.list
+         list: this.props.list,
+         relations: this.props.relations
       }));
 
       return ( 
