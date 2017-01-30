@@ -4,6 +4,7 @@
 import React from "react";
 import xhr from "../../utilities/Xhr";
 import { collectionEvents } from "../containers/Collection";
+import { merge, clone } from "lodash";
 
 /**
  * This is an abstract component that is intented to be extended rather than referenced nested within
@@ -66,7 +67,13 @@ class Create extends React.Component {
     * @instance
     */
    create() {
-      xhr.post(this.url, this.state.data)
+
+      var clonedData = clone(this.state.data);
+      merge(clonedData, {
+         relativePath: this.props.relativePath
+      });
+
+      xhr.post(this.url, clonedData)
          .then(response => {
             if (response.status === 201)
             {

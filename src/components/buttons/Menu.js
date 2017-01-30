@@ -27,13 +27,24 @@ class Menu extends React.Component {
     * @instance
     */
    render() {
+      // NOTE: It's not ideal to be doing this here because a toolbar is not necessarily
+      //       always going to be nested within a collection. A better approach may be to
+      //       allow a mapping of properties, however for pure convenience this is likely to
+      //       be very useful.
+      const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
+         list: this.props.list,
+         orderBy: this.props.orderBy,
+         orderDirection: this.props.orderDirection,
+         relativePath: this.props.relativePath
+      }));
+      
       return (
          <span ref="componentNode">
             <button id={this.id}
                     className="mdl-button mdl-js-button mdl-button--raised">{this.label}</button>
             <ul className="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
                 htmlFor={this.id}>
-               {this.props.children}
+               {childrenWithProps}
             </ul>
          </span>
       );

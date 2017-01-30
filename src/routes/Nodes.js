@@ -15,6 +15,7 @@ import BreadcrumbTrail from "../components/navigation/BreadcrumbTrail";
 import TableCell from "../components/renderers/TableCell";
 import TableHeading from "../components/renderers/TableHeading";
 import Thumbnail from "../components/renderers/Thumbnail";
+import Delete from "../components/renderers/Delete";
 import TableView from "../components/views/TableView";
 import TableViewHead from "../components/views/TableViewHead";
 import TableViewBody from "../components/views/TableViewBody";
@@ -57,6 +58,7 @@ const Nodes = React.createClass({
                         <TableHeading label="Created By" orderById="createdByUser.displayName" />
                         <TableHeading label="Created On" orderById="createdAt" />
                         <TableHeading label="Is Folder"/>
+                        <TableHeading/>
                      </TableViewHead>
 
                      <TableViewBody>
@@ -67,10 +69,15 @@ const Nodes = React.createClass({
                         <TableCell property="createdByUser.displayName" />
                         <TableCell property="createdAt" renderAs="DATE" />
                         <TableCell property="isFolder" />
+                        
+                        <TableCell>
+                           <Delete url="/api/-default-/public/alfresco/versions/1/nodes/" />
+                        </TableCell>
+
                      </TableViewBody>
                      
                      <TableViewFoot>
-                        <Pagination colspan="5"/>
+                        <Pagination colspan="6"/>
                      </TableViewFoot>
 
                   </TableView>
