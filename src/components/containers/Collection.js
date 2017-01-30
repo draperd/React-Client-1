@@ -4,6 +4,31 @@
 import React from "react";
 import xhr from "../../utilities/Xhr";
 
+/**
+ * The names of the {@link https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent|Custom Events} that
+ * are listened to by the [Collection component]{@link module:components/containers/Collection~Collection}.
+ * 
+ * @static
+ * @type {object}
+ * @property {string} ITEM_CREATED Indicates that a new item has been added to the collection 
+ *                                 (handled by [getData]{@link module:components/containers/Collection~Collection#getData})
+ * @property {string} PAGE_FORWARDS Indicates that the user wishes to move to the next page of data 
+ *                                  (handled by [pageForward]{@link module:components/containers/Collection~Collection#pageForward})
+ * @property {string} PAGE_BACKWARDS Indicates that the user wishes to move to the previous page of data 
+ *                                   (handled by [pageBack]{@link module:components/containers/Collection~Collection#pageBack})
+ * @property {string} UPDATE_MAX_ITEMS Indicates the user wishes to change the number of items displayed per page 
+ *                                     (handled by [updateMaxItems]{@link module:components/containers/Collection~Collection#updateMaxItems})
+ * @property {string} ITEM_UPDATED Indicates that an item in the collection has been updated
+ *                                 (handled by [getData]{@link module:components/containers/Collection~Collection#getData})
+ * @property {string} REORDER Indicates that the user wishes to change the order that the items are displayed in
+ *                            (handled by [reorderItems]{@link module:components/containers/Collection~Collection#reorderItems})
+ * @property {string} FILTER Indicates that the user wishes to filter the displayed data
+ *                           (handled by [filterItems]{@link module:components/containers/Collection~Collection#filterItems})
+ * @property {string} NAVIGATE Indicates that the user wishes to navigate "into" a displayed item
+ *                            (handled by [navigate]{@link module:components/containers/Collection~Collection#navigate})
+ * @property {string} RELATIVE_PATH Indicates that the user wishes to change the path to the displayed data
+ *                                  (handled by [setRelativePath]{@link module:components/containers/Collection~Collection#setRelativePath})
+ */
 const collectionEvents = {
    ITEM_CREATED: "itemCreated",
    PAGE_FORWARDS: "pageForward",
@@ -18,20 +43,56 @@ const collectionEvents = {
 export { collectionEvents };
 
 /**
+ * @classdesc
  * <p>This component can be used to render the response from a call to a REST API that returns a list
  * of items. Any components that are nested as children of this component will automatically be assigned
  * list, orderBy, orderDirection and relativePath properties. Nested components can trigger changes in
  * state by emitting an event that will trigger the loading of new data and updated properties will be
  * cascaded through all the nested components to allow react rendering.</p>
- * 
+ *
+ * @example <caption>Collection of Nodes</caption>
+ * <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" 
+ *             orderBy="name"
+ *             include="properties">
+ *     
+ *     <BreadcrumbTrail/>
+ *     
+ *     <TableView>
+ *
+ *        <TableViewHead> 
+ *           <TableHeading label="Thumbnail" />
+ *           <TableHeading label="Name" orderById="name" />
+ *           <TableHeading label="Created By" orderById="createdByUser.displayName" />
+ *           <TableHeading label="Created On" orderById="createdAt" />
+ *           <TableHeading label="Is Folder"/>
+ *        </TableViewHead>
+ *
+ *        <TableViewBody>
+ *           <TableCell >
+ *              <Thumbnail></Thumbnail>
+ *           </TableCell>
+ *           <TableCell property="name" navigation={true} view={true}/>
+ *           <TableCell property="createdByUser.displayName" />
+ *           <TableCell property="createdAt" renderAs="DATE" />
+ *           <TableCell property="isFolder" />
+ *        </TableViewBody>
+ *        
+ *        <TableViewFoot>
+ *           <Pagination colspan="5"/>
+ *        </TableViewFoot>
+ *
+ *     </TableView>
+ *  </Collection>
+ *
  * @class
+ * 
  */
 class Collection extends React.Component {
 
    /**
     * Creates new Collection component
     * 
-    * @instance
+    * @constructor
     * @param {object} props
     * @param {string} [props.url="/api/-default-/public/alfresco/versions/1/people"] The URL to use when making data requests
     * @param {string} [props.filterUrl="/api/-default-/public/alfresco/versions/1/queries/people"] The URL to use when filtering the displayed data
@@ -65,10 +126,23 @@ class Collection extends React.Component {
       };
    }
 
+   /**
+    * Calls [getData]{@link module:components/containers/Collection~Collection#getData} to retrieve some
+    * initial data.
+    * 
+    * @instance
+    */
    componentWillMount() {
       this.getData();
    }
 
+   /**
+    * Sets up all the event listeners required to trigger state updates. Each of the properties in 
+    * the [collectionEvents]{@link module:components/containers/Collection.collectionEvents} object
+    * will have a listener created for it.
+    * 
+    * @instance
+    */
    componentDidMount() {
       this.refs.list.addEventListener(collectionEvents.ITEM_CREATED, this.getData.bind(this));
       this.refs.list.addEventListener(collectionEvents.ITEM_UPDATED, this.getData.bind(this));
@@ -81,6 +155,26 @@ class Collection extends React.Component {
       this.refs.list.addEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath.bind(this));
    }
 
+   /**
+    * Makes an XHR request using the configured url property.
+    * 
+    * @instance
+    */
+   getData() {
+      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}&include=${this.include}`;
+      xhr.get(url)
+         .then(response => {
+            this.setState({list: response.data.list});
+         });
+   }
+
+   /**
+    * Triggered by the "FILTER" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This will make an XHR request that includes a "term" request
+    * parameter assigned the value taken from the emitted events "detail.term" attribute.
+    * 
+    * @instance
+    */
    filterItems(event) {
       if (event && event.detail && event.detail.term && event.detail.term.length > 1)
       {
@@ -101,6 +195,15 @@ class Collection extends React.Component {
       }
    }
 
+   /**
+    * Triggered by the "REORDER" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This updates the "orderBy" attribute in the Component state using
+    * the value taken from the emitted events "detail.orderBy" attribute. The "orderDirection" attribute in the 
+    * state will be updated if provided. The [getData]{@link module:components/containers/Collection~Collection#getData}
+    * function will then be called to retrieve new data sorted as requested.
+    * 
+    * @instance
+    */
    reorderItems(evt) {
       if (evt && evt.detail.orderBy)
       {
@@ -113,6 +216,15 @@ class Collection extends React.Component {
       }
    }
 
+   /**
+    * Triggered by the "UPDATE_MAX_ITEMS" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This updates the "maxItems" attribute in the Component state using
+    * the value taken from the emitted events "detail.maxItems" attribute. 
+    * The [getData]{@link module:components/containers/Collection~Collection#getData} function will then be called to 
+    * retrieve new data that includes (up to) the requested maximum number of items.
+    * 
+    * @instance
+    */
    updateMaxItems(evt) {
       if (evt && evt.detail)
       {
@@ -124,6 +236,14 @@ class Collection extends React.Component {
       }
    }
 
+   /**
+    * Triggered by the "PAGE_BACKWARDS" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This will decrement the "skipCount" state of the component by
+    * the current "maxItems" state value (providing that it is no already at 0) and then call 
+    * [getData]{@link module:components/containers/Collection~Collection#getData} to retrieve the previous page of data.
+    * 
+    * @instance
+    */
    pageBack() {
       if (this.state.list.pagination.skipCount)
       {
@@ -135,6 +255,14 @@ class Collection extends React.Component {
       }
    }
 
+   /**
+    * Triggered by the "PAGE_FORWARDS" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This will increment the "skipCount" state of the component by
+    * the current "maxItems" state value (providing that list.pagination.hasMoreItems is true) and then call 
+    * [getData]{@link module:components/containers/Collection~Collection#getData} to retrieve the next page of data.
+    * 
+    * @instance
+    */
    pageForward() {
       if (this.state.list.pagination.hasMoreItems)
       {
@@ -146,15 +274,15 @@ class Collection extends React.Component {
       }
    }
 
-   getData() {
-
-      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}&include=${this.include}`;
-      xhr.get(url)
-         .then(response => {
-            this.setState({list: response.data.list});
-         });
-   }
-
+   /**
+    * Triggered by the "NAVIGATE" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This will append the "detail.entry.name" attribute of the emitted
+    * event to the "relativePath" attribute of the component state (providing that the "detail.entry.isFolder") attribute
+    * of the event is true) and then call [getData]{@link module:components/containers/Collection~Collection#getData} 
+    * to retrieve the data for the new path.
+    * 
+    * @instance
+    */
    navigate(event) {
       if (event && event.detail && event.detail.entry.isFolder)
       {
@@ -167,6 +295,14 @@ class Collection extends React.Component {
       }
    }
 
+   /**
+    * Triggered by the "RELATIVE_PATH" [collectionEvents]{@link module:components/containers/Collection.collectionEvents}
+    * property being emitted by a nested component. This will set the "relativePath" attribute of the component state 
+    * to the "detail" attribute of the emitted event and then call 
+    * [getData]{@link module:components/containers/Collection~Collection#getData} to retrieve the data for the new path.
+    * 
+    * @instance
+    */
    setRelativePath(event) {
       if (event && event.detail)
       {
@@ -179,6 +315,12 @@ class Collection extends React.Component {
       }
    }
 
+   /**
+    * Updates the nested component children with properties for the list, orderBy, orderDirection and relativePath 
+    * state attributes and then renders them.
+    * 
+    * @return {JSX}
+    */
    render() {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          list: this.state.list,
