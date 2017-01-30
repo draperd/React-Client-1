@@ -1,6 +1,6 @@
 import React from "react";
 
-import Create from "../components/buttons/Create";
+import CreateButton from "../components/buttons/CreateButton";
 import Collection from "../components/containers/Collection";
 import Item from "../components/containers/Item";
 import CreateComment from "../components/forms/CreateComment";
@@ -29,10 +29,10 @@ class NodeDetails extends React.Component {
 
                <Collection url={commentsUrl}>
 
-                  <Create url={commentsUrl}
+                  <CreateButton url={commentsUrl}
                           formTitle="Add Comment">
                      <CreateComment ></CreateComment>
-                  </Create>
+                  </CreateButton>
 
                   <TableView>
 

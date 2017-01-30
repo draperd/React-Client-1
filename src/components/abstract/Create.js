@@ -1,11 +1,14 @@
 /**
- * @module components/buttons/Create
+ * @module
  */
 import React from "react";
 import xhr from "../../utilities/Xhr";
 import { collectionEvents } from "../containers/Collection";
 
 /**
+ * This is an abstract component that is intented to be extended rather than referenced nested within
+ * another component.
+ * 
  * @class
  */
 class Create extends React.Component {
@@ -13,13 +16,21 @@ class Create extends React.Component {
    /**
     * 
     * @instance
-    * @param  {object} props The instantiation properties
+    * @param {object} props
+    * @param {string} [url="/api/-default-/public/alfresco/versions/1/people"] The URL to POST to with form data
+    * @param {string} [label="Create"] The label for the control that is used to display the dialog
+    * @param {string} [dialogTitle="Create"] The title of the dialog used for creation
+    * @param {string} [confirmButton="Create"] The title used to confirm the creation action as displayed on the dialog
+    * @param {string} [cancelButton="Cancel"] The title used to confirm the creation action as displayed on the dialog
     */
    constructor(props) {
       super(props);
 
       this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
-      this.formTitle = props.formTitle || "Create";
+      this.label = props.label || "Create";
+      this.dialogTitle = props.dialogTitle || "Create";
+      this.confirmButton = props.confirmationButton || "Create";
+      this.cancelButton = props.cancelButton || "Cancel";
 
       this.state = {
          data: {}
@@ -32,6 +43,7 @@ class Create extends React.Component {
     */
    openDialog() {
       this.refs.dialog.showModal();
+      this.refs.dialog.style.visibility = "visible";
    }
 
    /**
@@ -74,6 +86,10 @@ class Create extends React.Component {
       });
    }
 
+   getControl() {
+      return "";
+   }
+
    /**
     * 
     * @instance
@@ -84,23 +100,26 @@ class Create extends React.Component {
          data: this.state.data
       }));
 
+      let control = React.cloneElement(this.getControl(), {
+         onClick: this.openDialog.bind(this)
+      })
+
       return (<span ref="componentNode">
          <dialog ref="dialog" className="mdl-dialog">
-            <h3 className="mdl-dialog__title">{this.formTitle}</h3>
+            <h3 className="mdl-dialog__title">{this.dialogTitle}</h3>
             <div className="mdl-dialog__content">
                {childrenWithProps}
             </div>
             <div className="mdl-dialog__actions">
                <button type="button" 
                        className="mdl-button"
-                       onClick={this.create.bind(this)}>Create</button>
+                       onClick={this.create.bind(this)}>{this.confirmButton}</button>
                <button type="button" 
                        className="mdl-button"
-                       onClick={this.cancel.bind(this)}>Cancel</button>
+                       onClick={this.cancel.bind(this)}>{this.cancelButton}</button>
            </div>
          </dialog>
-         <button className="mdl-button mdl-js-button mdl-button--raised"
-                 onClick={this.openDialog.bind(this)}>Create</button>
+        {control}
       </span>)
    }
 }

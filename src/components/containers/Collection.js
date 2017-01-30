@@ -108,7 +108,7 @@ class Collection extends React.Component {
 
       this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
       this.filterUrl = props.filterUrl || "/api/-default-/public/alfresco/versions/1/queries/people";
-      this.include = props.include || "";
+      this.include = props.include ? `&include=${props.include}` : "";
 
       this.state = {
          skipCount: props.skipCount || 0,
@@ -161,7 +161,7 @@ class Collection extends React.Component {
     * @instance
     */
    getData() {
-      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}&include=${this.include}`;
+      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}`;
       xhr.get(url)
          .then(response => {
             this.setState({list: response.data.list});
@@ -182,7 +182,7 @@ class Collection extends React.Component {
             skipCount: 0,
             orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
          }, () => {
-            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection}&include=${this.include}`;
+            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}`;
             xhr.get(url)
                .then(response => {
                   this.setState({list: response.data.list});
