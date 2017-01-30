@@ -38,7 +38,8 @@ const Nodes = React.createClass({
                         <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
                                         label="Folder" 
                                         dialogTitle="Create Folder"
-                                        formData={ { nodeType: "cm:folder" } }>
+                                        formData={ { nodeType: "cm:folder" } }
+                                        includeProps="relativePath" >
                            <Form>
                               <TextField name="name" label="Name"/>
                            </Form>

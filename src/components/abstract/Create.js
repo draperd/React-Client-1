@@ -26,6 +26,7 @@ class Create extends React.Component {
     * @param {string} [dialogTitle="Create"] The title of the dialog used for creation
     * @param {string} [confirmButton="Create"] The title used to confirm the creation action as displayed on the dialog
     * @param {string} [cancelButton="Cancel"] The title used to confirm the creation action as displayed on the dialog
+    * @param {string} [includeProps=""] A comma-delimited string of the property values to include in the POST request
     */
    constructor(props) {
       super(props);
@@ -35,6 +36,7 @@ class Create extends React.Component {
       this.dialogTitle = props.dialogTitle || "Create";
       this.confirmButton = props.confirmationButton || "Create";
       this.cancelButton = props.cancelButton || "Cancel";
+      this.includeProps = props.includeProps || "";
 
       this.state = {
          data: this.props.formData || {}
@@ -68,10 +70,17 @@ class Create extends React.Component {
     */
    create() {
 
-      var clonedData = clone(this.state.data);
-      merge(clonedData, {
-         relativePath: this.props.relativePath
-      });
+      let clonedData = clone(this.state.data);
+
+      // This works around the issue of the APIs not ignoring data that is superfluous...
+      if (this.includeProps)
+      {
+         let propsToMerge = {};
+         this.includeProps.split(",").forEach(function(prop) {
+            propsToMerge[prop] = this.props[prop];
+         }, this);
+         merge(clonedData, propsToMerge);
+      }
 
       xhr.post(this.url, clonedData)
          .then(response => {
