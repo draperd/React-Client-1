@@ -45,6 +45,7 @@ class MainLayout extends React.Component {
                <a className="mdl-navigation__link" href="/nodes">Nodes</a>
                <a className="mdl-navigation__link" href="/users">Users</a>
                <a className="mdl-navigation__link" href="/filmstrip">Filmstrip</a>
+               <a className="mdl-navigation__link" href="/sites">Sites</a>
             </Drawer>
 
             {this.props.children}
