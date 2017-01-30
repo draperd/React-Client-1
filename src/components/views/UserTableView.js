@@ -46,7 +46,9 @@ class UserTableView extends React.Component {
             )}</tbody>
             <tfoot>
                <tr>
-                  <Pagination colspan="5" list={this.props.list}/>
+                  <td colSpan="5">
+                     <Pagination list={this.props.list}/>
+                  </td>
                </tr>
             </tfoot>
          </table>);

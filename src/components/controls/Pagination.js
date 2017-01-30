@@ -1,12 +1,15 @@
 import React from "react";
 import { collectionEvents } from "../containers/Collection";
 
-class Pagination extends React.Component {
-
-   constructor(props) {
-      super(props);
-      this.colspan = props.colspan || 1;
+const paginationStyle = {
+   outerSpan: {
+      display: "inline-block",
+      width: "100%",
+      textAlign: "right"
    }
+};
+
+class Pagination extends React.Component {
 
    pageBack() {
       let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
@@ -31,7 +34,7 @@ class Pagination extends React.Component {
    }
 
    render() {
-      return (<td colSpan={this.colspan} ref="componentNode">
+      return (<span ref="componentNode" style={paginationStyle.outerSpan}>
          
          <span>Results per page:</span>
 
@@ -64,7 +67,7 @@ class Pagination extends React.Component {
                  onClick={this.pageForward.bind(this)}>
             <i className="material-icons">keyboard_arrow_right</i>
          </button>
-      </td>)
+      </span>)
    }
 }
 

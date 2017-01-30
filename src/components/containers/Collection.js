@@ -78,7 +78,9 @@ export { collectionEvents };
  *        </TableViewBody>
  *        
  *        <TableViewFoot>
- *           <Pagination colspan="5"/>
+ *           <TableCell colspan="6">
+ *              <Pagination />
+ *           </TableCell>
  *        </TableViewFoot>
  *
  *     </TableView>

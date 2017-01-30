@@ -7,6 +7,7 @@ class TableCell extends React.Component {
    constructor(props) {
       super(props);
       this.property = props.property;
+      this.colspan = props.colspan || 1;
    }
 
    navigate() {
@@ -38,6 +39,7 @@ class TableCell extends React.Component {
 
          return (
             <td ref="componentNode" 
+                colSpan={this.colspan} 
                 className="mdl-data-table__cell--non-numeric"
                 onClick={ this.props.navigation ? this.navigate.bind(this) : "" }
                 onDoubleClick={ this.props.view ? this.view.bind(this) : "" }
@@ -47,10 +49,13 @@ class TableCell extends React.Component {
       else
       {
          const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
-            item: this.props.item
+            item: this.props.item,
+            list: this.props.list
          }));
          return (
-            <td ref="componentNode" className="mdl-data-table__cell--non-numeric">{childrenWithProps}</td>
+            <td ref="componentNode" 
+                colSpan={this.colspan} 
+                className="mdl-data-table__cell--non-numeric">{childrenWithProps}</td>
          );
       }
    }

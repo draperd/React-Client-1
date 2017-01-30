@@ -35,7 +35,9 @@ const FilmStrip = React.createClass({
                      </TableViewBody>
                      
                      <TableViewFoot>
-                        <Pagination colspan="3"/>
+                        <TableCell colspan="3" >
+                           <Pagination />
+                        </TableCell>
                      </TableViewFoot>
 
                   </TableView>

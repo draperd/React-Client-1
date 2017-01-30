@@ -56,7 +56,9 @@ class NodeDetails extends React.Component {
                      </TableViewBody>
                      
                      <TableViewFoot>
-                        <Pagination colspan="4"/>
+                        <TableCell colspan="4">
+                           <Pagination />
+                        </TableCell>
                      </TableViewFoot>
 
                   </TableView>

@@ -89,7 +89,9 @@ const Nodes = React.createClass({
                      </TableViewBody>
                      
                      <TableViewFoot>
-                        <Pagination colspan="6"/>
+                        <TableCell colspan="6">
+                           <Pagination />
+                        </TableCell>
                      </TableViewFoot>
 
                   </TableView>
