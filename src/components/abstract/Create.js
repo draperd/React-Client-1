@@ -37,7 +37,7 @@ class Create extends React.Component {
       this.cancelButton = props.cancelButton || "Cancel";
 
       this.state = {
-         data: {}
+         data: this.props.formData || {}
       };
    }
 

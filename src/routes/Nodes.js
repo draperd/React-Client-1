@@ -15,6 +15,7 @@ import BreadcrumbTrail from "../components/navigation/BreadcrumbTrail";
 import TableCell from "../components/renderers/TableCell";
 import TableHeading from "../components/renderers/TableHeading";
 import Thumbnail from "../components/renderers/Thumbnail";
+import Property from "../components/renderers/Property";
 import Delete from "../components/renderers/Delete";
 import TableView from "../components/views/TableView";
 import TableViewHead from "../components/views/TableViewHead";
@@ -36,12 +37,20 @@ const Nodes = React.createClass({
                      <Menu label="Create...">
                         <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
                                         label="Folder" 
-                                        dialogTitle="Create Folder">
+                                        dialogTitle="Create Folder"
+                                        formData={ { nodeType: "cm:folder" } }>
                            <Form>
-                              <TextField name="name"
-                                         label="Name"/>
-                              <TextField name="nodeType"
-                                         label="Node Type"/>
+                              <TextField name="name" label="Name"/>
+                           </Form>
+                        </CreateMenuItem>
+
+                        <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
+                                        label="Content" 
+                                        dialogTitle="Create Node"
+                                        formData={ { nodeType: "cm:content" } }>
+                           <Form>
+                              <TextField name="name" label="Name"/>
+                              <TextField name="content" label="Content"/>
                            </Form>
                         </CreateMenuItem>
                      </Menu>
@@ -67,7 +76,9 @@ const Nodes = React.createClass({
                         </TableCell>
                         <TableCell property="name" navigation={true} view={true}/>
                         <TableCell property="createdByUser.displayName" />
-                        <TableCell property="createdAt" renderAs="DATE" />
+                        <TableCell>
+                           <Property property="createdAt" renderAs="DATE"></Property>
+                        </TableCell>
                         <TableCell property="isFolder" />
                         
                         <TableCell>

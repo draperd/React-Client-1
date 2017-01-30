@@ -33,7 +33,7 @@ class Form extends React.Component {
    render() {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
          onChange: this.handleChange,
-         value: this.props.data[this.props.id], 
+         value: this.props.data[child.props.name], 
          data: this.props.data
       }));
       
