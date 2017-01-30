@@ -44,8 +44,18 @@ You can mix and match HTML and React components and any component should be nest
 
 If you need to add a component (very likely) then raise an issue with the use-case or simply add it and reference it.
 
+## Documentation
+I'm starting to document the components using [JSDoc](https://github.com/jsdoc3/jsdoc). To build documentation locally you can run:
+
+```
+npm run generate-docs
+```
+
+Then you can open the `docs/index.html` file in a browser to explore what has been documented so far (**please note that not all components are currently documented**). Please let me know if you spot any mistakes or have any suggestions.
+
+
 ## What's Next?
-At the present time this project is simply and experiment to investigate a potential approach for building applications. None of the components will be stable and are subject to change. If this experiment meets with positive feedback then I will look to add JSDoc and tests and then publish the Components as an NPM package to be consumed in other React applications.
+At the present time this project is simply and experiment to investigate a potential approach for building applications. None of the components will be stable and are subject to change. If this experiment meets with positive feedback then I will look to publish the Components as an NPM package to be consumed in other React applications.
 
 If you have any feedback (good or bad) or if you'd like to contribute then please let me know!
 
