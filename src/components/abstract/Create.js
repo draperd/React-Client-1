@@ -7,7 +7,10 @@ import { collectionEvents } from "../containers/Collection";
 
 /**
  * This is an abstract component that is intented to be extended rather than referenced nested within
- * another component.
+ * another component it is extended by by both [CreateButton]{@link module:components/buttons/CreateButton~CreateButton}
+ * and [CreateMenuItem]{@link module:components/menuitems/CreateMenuItem~CreateMenuItem}. It provides a simple
+ * way of rendering a control that can display a dialog that when confirmed will make a POST request to create
+ * a new item.
  * 
  * @class
  */
@@ -38,15 +41,19 @@ class Create extends React.Component {
    }
 
    /**
+    * Displays the dialog.
     * 
     * @instance
     */
    openDialog() {
       this.refs.dialog.showModal();
-      this.refs.dialog.style.visibility = "visible";
+
+      // This is required for controls that can be hidden on use, i.e. menu item in a drop-down menu...
+      this.refs.dialog.style.visibility = "visible"; 
    }
 
    /**
+    * Hides the dialog
     * 
     * @instance
     */
@@ -77,6 +84,8 @@ class Create extends React.Component {
    }
 
    /**
+    * Called whenever one of the fields in the form is updated and updates the component state with the
+    * new value for that field.
     * 
     * @instance
     */
@@ -86,6 +95,12 @@ class Create extends React.Component {
       });
    }
 
+   /**
+    * This function needs to be overridden by extending components to ensure that a control is rendered
+    * that can be used to display the create dialog.
+    * 
+    * @return {JSX}
+    */
    getControl() {
       return "";
    }
@@ -93,6 +108,7 @@ class Create extends React.Component {
    /**
     * 
     * @instance
+    * @return {JSX}
     */
    render() {
       const childrenWithProps = React.Children.map(this.props.children, (child) => React.cloneElement(child, {
@@ -102,7 +118,7 @@ class Create extends React.Component {
 
       let control = React.cloneElement(this.getControl(), {
          onClick: this.openDialog.bind(this)
-      })
+      });
 
       return (<span ref="componentNode">
          <dialog ref="dialog" className="mdl-dialog">

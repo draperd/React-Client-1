@@ -3,6 +3,10 @@ import React from "react";
 import Menu from "../components/buttons/Menu";
 import Collection from "../components/containers/Collection";
 import Pagination from "../components/controls/Pagination";
+
+import Form from "../components/forms/Form";
+import TextField from "../components/fields/TextField";
+
 import Toolbar from "../components/layouts/Toolbar";
 
 import CreateMenuItem from "../components/menuitems/CreateMenuItem";
@@ -29,7 +33,16 @@ const Nodes = React.createClass({
                   
                   <Toolbar>
                      <Menu label="Create...">
-                        <CreateMenuItem label="Folder"></CreateMenuItem>
+                        <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
+                                        label="Folder" 
+                                        dialogTitle="Create Folder">
+                           <Form>
+                              <TextField name="name"
+                                         label="Name"/>
+                              <TextField name="nodeType"
+                                         label="Node Type"/>
+                           </Form>
+                        </CreateMenuItem>
                      </Menu>
 
                   </Toolbar>
