@@ -22,6 +22,8 @@ import TableViewHead from "../components/views/TableViewHead";
 import TableViewBody from "../components/views/TableViewBody";
 import TableViewFoot from "../components/views/TableViewFoot";
 
+import UploadTarget from "../components/upload/UploadTarget";
+
 import Content from "../components/layouts/Content";
 
 const Nodes = React.createClass({
@@ -61,41 +63,44 @@ const Nodes = React.createClass({
 
                   <BreadcrumbTrail/>
                   
-                  <TableView>
+                  <UploadTarget url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children">
+                     <TableView>
 
-                     <TableViewHead> 
-                        <TableHeading label="Thumbnail" />
-                        <TableHeading label="Name" orderById="name" />
-                        <TableHeading label="Created By" orderById="createdByUser.displayName" />
-                        <TableHeading label="Created On" orderById="createdAt" />
-                        <TableHeading label="Is Folder"/>
-                        <TableHeading/>
-                     </TableViewHead>
+                        <TableViewHead> 
+                           <TableHeading label="Thumbnail" />
+                           <TableHeading label="Name" orderById="name" />
+                           <TableHeading label="Created By" orderById="createdByUser.displayName" />
+                           <TableHeading label="Created On" orderById="createdAt" />
+                           <TableHeading label="Is Folder"/>
+                           <TableHeading/>
+                        </TableViewHead>
 
-                     <TableViewBody>
-                        <TableCell >
-                           <Thumbnail></Thumbnail>
-                        </TableCell>
-                        <TableCell property="name" navigation={true} view={true}/>
-                        <TableCell property="createdByUser.displayName" />
-                        <TableCell>
-                           <Property property="createdAt" renderAs="DATE"></Property>
-                        </TableCell>
-                        <TableCell property="isFolder" />
+                        <TableViewBody>
+                           <TableCell >
+                              <Thumbnail></Thumbnail>
+                           </TableCell>
+                           <TableCell property="name" navigation={true} view={true}/>
+                           <TableCell property="createdByUser.displayName" />
+                           <TableCell>
+                              <Property property="createdAt" renderAs="DATE"></Property>
+                           </TableCell>
+                           <TableCell property="isFolder" />
+                           
+                           <TableCell>
+                              <Delete url="/api/-default-/public/alfresco/versions/1/nodes/" />
+                           </TableCell>
+
+                        </TableViewBody>
                         
-                        <TableCell>
-                           <Delete url="/api/-default-/public/alfresco/versions/1/nodes/" />
-                        </TableCell>
+                        <TableViewFoot>
+                           <TableCell colspan="6">
+                              <Pagination />
+                           </TableCell>
+                        </TableViewFoot>
 
-                     </TableViewBody>
+                     </TableView>
                      
-                     <TableViewFoot>
-                        <TableCell colspan="6">
-                           <Pagination />
-                        </TableCell>
-                     </TableViewFoot>
-
-                  </TableView>
+                  </UploadTarget>
                </Collection>
 
          </Content>
