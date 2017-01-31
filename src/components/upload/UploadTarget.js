@@ -3,6 +3,7 @@
  */
 import React from "react";
 import { collectionEvents } from "../containers/Collection";
+import { throttle } from "lodash";
 
 /**
  * 
@@ -49,6 +50,8 @@ class UploadTarget extends React.Component {
       this.onDrop = this.onDrop.bind(this);
       this.onDrageEnter = this.onDragEnter.bind(this);
       this.onDragOver = this.onDragOver.bind(this);
+
+      this.throttledEmit = throttle(this.onUploadFinished, 1000);
    }
 
    /**
@@ -429,7 +432,7 @@ class UploadTarget extends React.Component {
          this.setState({
             files: files,
             uploadsInProgress: this.state.uploadsInProgress - 1
-         }, () => this.onUploadFinished(fileId));
+         }, () => this.throttledEmit(fileId));
       }
       else 
       {
@@ -452,7 +455,7 @@ class UploadTarget extends React.Component {
          this.setState({
             files: files,
             uploadsInProgress: this.state.uploadsInProgress - 1
-         }, () => this.onUploadFinished(fileId));
+         }, () => this.throttledEmit(fileId));
       }
    }
 
@@ -464,16 +467,27 @@ class UploadTarget extends React.Component {
     * @param {string} fileId The unique id of the file that has finished (or failed) uploading
     */
    onUploadFinished(fileId) {
+      // TODO: This needs to be debounced...
       var changeEvent = new CustomEvent(collectionEvents.ITEM_CREATED, {
          bubbles: true
       });
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
+   /**
+    * Opens the dialog displaying the upload progress.
+    * 
+    * @instance
+    */
    openDialog() {
       this.refs.dialog.showModal();
    }
 
+   /**
+    * Closes the dialog displaying the upload progress.
+    * 
+    * @instance
+    */
    closeDialog() {
       this.refs.dialog.close();
    }
