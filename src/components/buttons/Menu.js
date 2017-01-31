@@ -5,6 +5,24 @@ import React from "react";
 import { uniqueId } from "lodash";
 
 /**
+ * <p>This is a button that when clicked will open a drop-down menu. There are no menu items provided by 
+ * default as these are expected to be provided as nested components. Each nested component should render
+ * a "li" element with a "mdl-menu__item" CSS class (see the 
+ * [CreateMenuItem]{@link module:components/menuitems/CreateMenuItem~CreateMenuItem}) for an example).</p>
+ *
+ * @example <caption>A menu button with a nested menu item</caption>
+ * <Menu label="Create...">
+ *     <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
+ *                     label="Folder" 
+ *                     dialogTitle="Create Folder"
+ *                     formData={ { nodeType: "cm:folder" } }
+ *                     includeProps="relativePath" >
+ *        <Form>
+ *           <TextField name="name" label="Name"/>
+ *        </Form>
+ *     </CreateMenuItem>
+ *  </Menu>
+ * 
  * @class
  */
 class Menu extends React.Component {

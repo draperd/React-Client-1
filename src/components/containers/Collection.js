@@ -43,7 +43,6 @@ const collectionEvents = {
 export { collectionEvents };
 
 /**
- * @classdesc
  * <p>This component can be used to render the response from a call to a REST API that returns a list
  * of items. Any components that are nested as children of this component will automatically be assigned
  * list, relations, orderBy, orderDirection and relativePath properties. Nested components can trigger changes in
@@ -105,6 +104,7 @@ class Collection extends React.Component {
     * @param {string} [props.relativePath="/"] Any relative path to apply (applies when retrieving data from a hierarchy, e.g. Nodes)
     * @param {string} [props.include=""] Additional data to include in the retrieved data (see the API used for details of what is available)
     * @param {string} [props.relations=""] Additional relations to include in the retrieved data (see the API used for details of what is available)
+    * @param {string} [props.includeSource="true"] Indicates whether or not data about the source object should be returned
     */
    constructor(props) {
       super(props);
@@ -113,6 +113,7 @@ class Collection extends React.Component {
       this.filterUrl = props.filterUrl || "/api/-default-/public/alfresco/versions/1/queries/people";
       this.include = props.include ? `&include=${props.include}` : "";
       this.relations = props.relations ? `&relations=${props.relations}` : "";
+      this.includeSource = (props.includeSource && props.includeSource.toString().toLowerCase() === "true") ? "&includeSource=true" : "";
 
       this.state = {
          skipCount: props.skipCount || 0,
@@ -166,7 +167,7 @@ class Collection extends React.Component {
     * @instance
     */
    getData() {
-      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}${this.relations}`;
+      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}${this.relations}${this.includeSource}`;
       xhr.get(url)
          .then(response => {
             this.setState({
