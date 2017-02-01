@@ -35,6 +35,7 @@ const Nodes = React.createClass({
                         orderBy="name"
                         include="properties"
                         includeSource="true" >
+                        useHash="true">
                   
                   <Toolbar>
                      <Menu label="Create...">
@@ -63,7 +64,7 @@ const Nodes = React.createClass({
 
                   <BreadcrumbTrail/>
                   
-                  <UploadTarget url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children">
+                  <UploadTarget>
                      <TableView>
 
                         <TableViewHead> 

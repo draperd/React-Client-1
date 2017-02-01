@@ -295,6 +295,7 @@ class UploadTarget extends React.Component {
          }
          
          fileInfo.request.open("POST", this.url, true);
+         fileInfo.request.setRequestHeader("authorization", "Basic " + btoa(localStorage.ticket));
          fileInfo.request.send(formData);
       });
    }

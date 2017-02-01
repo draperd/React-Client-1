@@ -339,7 +339,8 @@ class Collection extends React.Component {
          relations: this.state.relations,
          orderBy: this.state.orderBy,
          orderDirection: this.state.orderDirection,
-         relativePath: this.state.relativePath
+         relativePath: this.state.relativePath,
+         url: this.url
       }));
       return (
          <div ref="list" >
