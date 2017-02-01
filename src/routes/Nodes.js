@@ -51,10 +51,12 @@ const Nodes = React.createClass({
                         <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
                                         label="Content" 
                                         dialogTitle="Create Node"
-                                        formData={ { nodeType: "cm:content" } }>
+                                        multipartFormData={ { filedata: "text/plain" } }
+                                        formData={ { nodeType: "cm:content" } }
+                                        includeProps="relativePath">
                            <Form>
                               <TextField name="name" label="Name"/>
-                              <TextField name="content" label="Content"/>
+                              <TextField name="filedata" label="Content"/>
                            </Form>
                         </CreateMenuItem>
                      </Menu>

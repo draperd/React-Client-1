@@ -12,6 +12,34 @@ import { merge, clone } from "lodash";
  * and [CreateMenuItem]{@link module:components/menuitems/CreateMenuItem~CreateMenuItem}. It provides a simple
  * way of rendering a control that can display a dialog that when confirmed will make a POST request to create
  * a new item.
+ *
+ * @example <caption>Creating a folder</caption>
+ * <Menu label="Create...">
+ *    <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
+ *                    label="Folder"
+ *                    dialogTitle="Create Folder"
+ *                    formData={ { nodeType: "cm:folder" } }
+ *                    includeProps="relativePath" >
+ *       <Form>
+ *          <TextField name="name" label="Name"/>
+ *       </Form>
+ *    </CreateMenuItem>
+ * </Menu>
+ *
+ * @example <caption>Creating content</caption>
+ * <Menu label="Create...">
+ *    <CreateMenuItem url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"
+ *                    label="Text File"
+ *                    dialogTitle="Create Text File"
+ *                    multipartFormData={ { filedata: "text/plain" } }
+ *                    formData={ { nodeType: "cm:content" } }
+ *                    includeProps="relativePath" >
+ *       <Form>
+ *          <TextField name="name" label="Name"/>
+ *          <TextField name="filedata" label="Content"/>
+ *       </Form>
+ *    </CreateMenuItem>
+ * </Menu>
  * 
  * @class
  */
@@ -27,6 +55,9 @@ class Create extends React.Component {
     * @param {string} [confirmButton="Create"] The title used to confirm the creation action as displayed on the dialog
     * @param {string} [cancelButton="Cancel"] The title used to confirm the creation action as displayed on the dialog
     * @param {string} [includeProps=""] A comma-delimited string of the property values to include in the POST request
+    * @param {object} [formData={}] Additional parameters that should be included in the POST
+    * @param {object} [multipartFormData] Some REST APIs require the POST to be multipart/form-data encoded. In this case
+    * you can set this property to be an object mapping the request parameter name to the type (e.g. "text/plain")
     */
    constructor(props) {
       super(props);
@@ -80,6 +111,24 @@ class Create extends React.Component {
             propsToMerge[prop] = this.props[prop];
          }, this);
          merge(clonedData, propsToMerge);
+      }
+
+      if (this.props.multipartFormData)
+      {
+         const formData = new FormData();
+         Object.keys(clonedData).forEach(function(key) {
+
+            let type = this.props.multipartFormData[key];
+            if (type)
+            {
+               formData.append(key, new Blob([clonedData[key]], { type: type }));
+            }
+            else
+            {
+               formData.append(key, clonedData[key]);
+            }
+         }, this);
+         clonedData = formData;
       }
 
       xhr.post(this.url, clonedData)

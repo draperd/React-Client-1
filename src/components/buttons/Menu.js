@@ -54,7 +54,8 @@ class Menu extends React.Component {
          relations: this.props.relations,
          orderBy: this.props.orderBy,
          orderDirection: this.props.orderDirection,
-         relativePath: this.props.relativePath
+         relativePath: this.props.relativePath,
+         url: this.props.url
       }));
       
       return (
