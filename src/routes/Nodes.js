@@ -35,7 +35,6 @@ const Nodes = React.createClass({
                         orderBy="name"
                         include="properties"
                         includeSource="true" >
-                        useHash="true">
                   
                   <Toolbar>
                      <Menu label="Create...">
