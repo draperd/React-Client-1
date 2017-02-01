@@ -37,7 +37,7 @@ class Thumbnail extends React.Component {
          }
          else
          {
-            if (this.props.item)
+            if (id)
             {
                xhr.post(`/api/-default-/public/alfresco/versions/1/nodes/${id}/renditions`, {
                   id: renditionId

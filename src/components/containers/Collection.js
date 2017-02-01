@@ -3,6 +3,7 @@
  */
 import React from "react";
 import xhr from "../../utilities/Xhr";
+import queryString from "query-string";
 
 /**
  * The names of the {@link https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent|Custom Events} that
@@ -105,6 +106,7 @@ class Collection extends React.Component {
     * @param {string} [props.include=""] Additional data to include in the retrieved data (see the API used for details of what is available)
     * @param {string} [props.relations=""] Additional relations to include in the retrieved data (see the API used for details of what is available)
     * @param {string} [props.includeSource="true"] Indicates whether or not data about the source object should be returned
+    * @param {string} [props.useHash="false"] Indicates whether or not the URL hash should be used for the relativePath
     */
    constructor(props) {
       super(props);
@@ -139,7 +141,20 @@ class Collection extends React.Component {
     * @instance
     */
    componentWillMount() {
-      this.getData();
+
+      if (this.props.useHash)
+      {
+         const parsedHash = queryString.parse(window.location.hash);
+         this.setState({
+            relativePath: parsedHash.relativePath || "/"
+         }, () => {
+            this.getData();
+         });
+      }
+      else
+      {
+         this.getData();
+      }
    }
 
    /**
@@ -159,6 +174,14 @@ class Collection extends React.Component {
       this.refs.list.addEventListener(collectionEvents.FILTER, this.filterItems.bind(this));
       this.refs.list.addEventListener(collectionEvents.NAVIGATE, this.navigate.bind(this));
       this.refs.list.addEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath.bind(this));
+
+
+      if (this.props.useHash)
+      {
+         window.addEventListener("hashchange", (event) => {
+            console.info("Hash updated", event);
+         });
+      }
    }
 
    /**
@@ -298,9 +321,15 @@ class Collection extends React.Component {
    navigate(event) {
       if (event && event.detail && event.detail.entry.isFolder)
       {
+         let relativePath = `${this.state.relativePath}${event.detail.entry.name}/`;
+         if (this.props.useHash)
+         {
+            window.history.pushState(null, null, "#relativePath=" + relativePath);
+         }
+
          this.setState({
             skipCount: 0,
-            relativePath: `${this.state.relativePath}${event.detail.entry.name}/`
+            relativePath: relativePath
          }, () => {
             this.getData();
          });
@@ -318,6 +347,11 @@ class Collection extends React.Component {
    setRelativePath(event) {
       if (event && event.detail)
       {
+         if (this.props.useHash)
+         {
+            window.history.pushState(null, null, "#relativePath=" + event.detail);
+         }
+
          this.setState({
             skipCount: 0,
             relativePath: event.detail

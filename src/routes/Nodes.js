@@ -34,7 +34,8 @@ const Nodes = React.createClass({
             <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children" 
                         orderBy="name"
                         include="properties"
-                        includeSource="true" >
+                        includeSource="true"
+                        useHash="true" >
                   
                   <Toolbar>
                      <Menu label="Create...">
