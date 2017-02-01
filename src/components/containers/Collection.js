@@ -179,7 +179,12 @@ class Collection extends React.Component {
       if (this.props.useHash)
       {
          window.addEventListener("hashchange", (event) => {
-            console.info("Hash updated", event);
+            const parsedHash = queryString.parse(window.location.hash);
+            this.setState({
+               relativePath: parsedHash.relativePath || "/"
+            }, () => {
+               this.getData();
+            });
          });
       }
    }
