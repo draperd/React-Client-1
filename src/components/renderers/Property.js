@@ -1,37 +1,40 @@
+/**
+ * @module
+ */
 import React from "react";
-import { get } from "lodash";
-import { collectionEvents } from "../containers/Collection";
+import Renderer from "./Renderer";
 
-class Property extends React.Component {
+/**
+ * <p>Renders a property of the current item. The rendering capabilities are inherited from the 
+ * [Renderer]{@link module:components/renderers/Renderer~Renderer}
+ * class that this extends.</p>
+ *
+ * @example <caption>Renders the "name" property of the current item</caption>
+ * <Property property="name" />
+ * 
+ * @class
+ */
+class Property extends Renderer {
 
-   navigate() {
-      let changeEvent = new CustomEvent(collectionEvents.NAVIGATE, {
-         detail: this.props.item,
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
+   /**
+    * @instance
+    * @return {JSX}
+    */
    render() {
       
-      let renderedProperty = get(this.props.item.entry, this.props.property || "id", "");
-      if (typeof renderedProperty.toString === "function")
-      {
-         renderedProperty = renderedProperty.toString();
-      }
+      let renderedProperty = this.getPropertyStringValue({
+         item: this.props.item.entry,
+         property: this.props.property
+      });
 
-      if (this.props.renderAs === "DATE")
-      {
-         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-         renderedProperty = new Date(renderedProperty).toLocaleDateString("en-GB", options);
-      }
+      renderedProperty = this.processPropertyValue({
+         value: renderedProperty,
+         renderAs: this.props.renderAs
+      });
 
-      if (this.props.navigation)
-      {
-         renderedProperty = (<span role="link" onClick={this.navigate.bind(this)}>{renderedProperty}</span>);
-      }
-
-      return (<span ref="componentNode">{renderedProperty}</span>);
+      return (<span ref="componentNode"
+                    onClick={ this.props.navigation ? this.navigate.bind(this) : "" }
+                    onDoubleClick={ this.props.view ? this.view.bind(this) : "" }>{renderedProperty}</span>);
    }
 }
 

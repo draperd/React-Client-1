@@ -1,41 +1,68 @@
+/**
+ * @module
+ */
 import React from "react";
-import { get } from "lodash";
-import { collectionEvents } from "../containers/Collection";
+import Renderer from "./Renderer";
 
-class TableCell extends React.Component {
+/**
+ * <p>Renders a cell within a [TableView]{@link module:components/views/TableView~TableView} and is expected
+ * to be a child component of either [TableViewBody]{@link module:components/views/TableViewBody~TableViewBody}
+ * or [TableViewFoot]{@link module:components/views/TableViewFoot~TableViewFoot}. If a "property" is provided
+ * as an attribute then that will be rendered but when a "property" attribute is not provided then a cell
+ * will be rendered containing any child components provided.</p>
+ * <p>The rendering capabilities are inherited from the [Renderer]{@link module:components/renderers/Renderer~Renderer}
+ * class that this extends.</p>
+ *
+ * @example <caption>Renders a cell containing a thumbnail of the current item</caption>
+ * <TableView>
+ *    <TableViewBody>
+ *        <TableCell>
+ *           <Thumbnail></Thumbnail>
+ *        </TableCell>
+ *     </TableViewBody>
+ *  </TableView>
+ *
+ * @example <caption>Renders the "name" property of the current item</caption>
+ * <TableView>
+ *    <TableViewBody>
+ *        <TableCell property="name" />
+ *     </TableViewBody> 
+ *  </TableView>
+ * 
+ * @class
+ */
+class TableCell extends Renderer {
 
+   /**
+    * 
+    * @constructor
+    * @param  {object} props
+    * @param  {string} [props.property] The property of the current item to render in the cell
+    * @param  {number} [props.colspan=1] The number of columns that the cell should span
+    */
    constructor(props) {
       super(props);
       this.property = props.property;
       this.colspan = props.colspan || 1;
    }
 
-   navigate() {
-      let changeEvent = new CustomEvent(collectionEvents.NAVIGATE, {
-         detail: this.props.item,
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
-   view() {
-      this.context.router.push(`/node/${this.props.item.entry.id}`);
-   }
-
+   /**
+    * 
+    * @instance
+    * @return {JSX}
+    */
    render() {
       if (this.props.property)
       {
-         let renderedProperty = get(this.props.item.entry, this.property, "");
-         if (typeof renderedProperty.toString === "function")
-         {
-            renderedProperty = renderedProperty.toString();
-         }
+         let renderedProperty = this.getPropertyStringValue({
+            item: this.props.item.entry,
+            property: this.property
+         });
 
-         if (this.props.renderAs === "DATE")
-         {
-            var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-            renderedProperty = new Date(renderedProperty).toLocaleDateString("en-GB", options);
-         }
+         renderedProperty = this.processPropertyValue({
+            value: renderedProperty,
+            renderAs: this.props.renderAs
+         });
 
          return (
             <td ref="componentNode" 
