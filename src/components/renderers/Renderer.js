@@ -95,6 +95,24 @@ class Renderer extends React.Component {
    /**
     * 
     * @instance
+    * @return {string} The rendered property value
+    */
+   getRenderedProperty() {
+      let renderedProperty = this.getPropertyStringValue({
+         item: this.props.item.entry,
+         property: this.props.property
+      });
+
+      renderedProperty = this.processPropertyValue({
+         value: renderedProperty,
+         renderAs: this.props.renderAs
+      });
+      return renderedProperty;
+   }
+
+   /**
+    * 
+    * @instance
     * @return {JSX}
     */
    render() {

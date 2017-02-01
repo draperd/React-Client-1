@@ -54,23 +54,13 @@ class TableCell extends Renderer {
    render() {
       if (this.props.property)
       {
-         let renderedProperty = this.getPropertyStringValue({
-            item: this.props.item.entry,
-            property: this.property
-         });
-
-         renderedProperty = this.processPropertyValue({
-            value: renderedProperty,
-            renderAs: this.props.renderAs
-         });
-
+         let renderedProperty = this.getRenderedProperty();
          return (
             <td ref="componentNode" 
                 colSpan={this.colspan} 
                 className="mdl-data-table__cell--non-numeric"
                 onClick={ this.props.navigation ? this.navigate.bind(this) : "" }
-                onDoubleClick={ this.props.view ? this.view.bind(this) : "" }
-                >{renderedProperty}</td>
+                onDoubleClick={ this.props.view ? this.view.bind(this) : "" }>{renderedProperty}</td>
          );
       }
       else

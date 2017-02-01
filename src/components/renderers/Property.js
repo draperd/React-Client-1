@@ -21,17 +21,7 @@ class Property extends Renderer {
     * @return {JSX}
     */
    render() {
-      
-      let renderedProperty = this.getPropertyStringValue({
-         item: this.props.item.entry,
-         property: this.props.property
-      });
-
-      renderedProperty = this.processPropertyValue({
-         value: renderedProperty,
-         renderAs: this.props.renderAs
-      });
-
+      let renderedProperty = this.getRenderedProperty();
       return (<span ref="componentNode"
                     onClick={ this.props.navigation ? this.navigate.bind(this) : "" }
                     onDoubleClick={ this.props.view ? this.view.bind(this) : "" }>{renderedProperty}</span>);
