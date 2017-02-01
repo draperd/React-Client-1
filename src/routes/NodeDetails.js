@@ -25,7 +25,7 @@ class NodeDetails extends React.Component {
          <Content>
             <Item>
                <Property property="name"></Property>
-               <Thumbnail></Thumbnail>
+               <Thumbnail renditionId="imgpreview"></Thumbnail>
 
                <Collection url={commentsUrl}>
 

@@ -1,14 +1,16 @@
 import React from "react";
 import { get } from "lodash";
+import xhr from "../../utilities/Xhr";
 
 class Thumbnail extends React.Component {
 
    render() {
 
       let thumbnail;
-      if (!this.props.item)
+      let id = get(this.props, "item.entry.id", "");
+      if (!id)
       {
-
+         // Don't do anything without an id!
       }
       else if (this.props.item.entry.isFolder)
       {
@@ -30,11 +32,20 @@ class Thumbnail extends React.Component {
          let src = "";
          if (hasRendition)
          {
-            src = `/api/-default-/public/alfresco/versions/1/nodes/${this.props.item.entry.id}/renditions/${renditionId}/content?&alf_ticket=${localStorage.ticket}`;
+            src = `/api/-default-/public/alfresco/versions/1/nodes/${id}/renditions/${renditionId}/content?&alf_ticket=${localStorage.ticket}`;
             thumbnail = <img src={src} role="presentation" />
          }
          else
          {
+            if (this.props.item)
+            {
+               xhr.post(`/api/-default-/public/alfresco/versions/1/nodes/${id}/renditions`, {
+                  id: renditionId
+               }).catch(() => {
+                  console.info("Ignore the 404");
+               });
+            }
+            
             thumbnail = <i className="material-icons">insert_drive_file</i>;
          }
          
