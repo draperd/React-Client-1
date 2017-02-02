@@ -132,6 +132,15 @@ class Collection extends React.Component {
          },
          relations: {}
       };
+
+      this.getData = this.getData.bind(this);
+      this.pageBack= this.pageBack.bind(this);
+      this.pageForward = this.pageForward.bind(this);
+      this.updateMaxItems = this.updateMaxItems.bind(this);
+      this.reorderItems = this.reorderItems.bind(this);
+      this.filterItems = this.filterItems.bind(this);
+      this.navigate = this.navigate.bind(this);
+      this.setRelativePath = this.setRelativePath.bind(this);
    }
 
    /**
@@ -165,16 +174,15 @@ class Collection extends React.Component {
     * @instance
     */
    componentDidMount() {
-      this.refs.list.addEventListener(collectionEvents.ITEM_CREATED, this.getData.bind(this));
-      this.refs.list.addEventListener(collectionEvents.ITEM_UPDATED, this.getData.bind(this));
-      this.refs.list.addEventListener(collectionEvents.PAGE_BACKWARDS, this.pageBack.bind(this));
-      this.refs.list.addEventListener(collectionEvents.PAGE_FORWARDS, this.pageForward.bind(this));
-      this.refs.list.addEventListener(collectionEvents.UPDATE_MAX_ITEMS, this.updateMaxItems.bind(this));
-      this.refs.list.addEventListener(collectionEvents.REORDER, this.reorderItems.bind(this));
-      this.refs.list.addEventListener(collectionEvents.FILTER, this.filterItems.bind(this));
-      this.refs.list.addEventListener(collectionEvents.NAVIGATE, this.navigate.bind(this));
-      this.refs.list.addEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath.bind(this));
-
+      this.refs.list.addEventListener(collectionEvents.ITEM_CREATED, this.getData);
+      this.refs.list.addEventListener(collectionEvents.ITEM_UPDATED, this.getData);
+      this.refs.list.addEventListener(collectionEvents.PAGE_BACKWARDS, this.pageBack);
+      this.refs.list.addEventListener(collectionEvents.PAGE_FORWARDS, this.pageForward);
+      this.refs.list.addEventListener(collectionEvents.UPDATE_MAX_ITEMS, this.updateMaxItems);
+      this.refs.list.addEventListener(collectionEvents.REORDER, this.reorderItems);
+      this.refs.list.addEventListener(collectionEvents.FILTER, this.filterItems);
+      this.refs.list.addEventListener(collectionEvents.NAVIGATE, this.navigate);
+      this.refs.list.addEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath);
 
       if (this.props.useHash)
       {
@@ -189,6 +197,16 @@ class Collection extends React.Component {
     * @instance
     */
    componentWillUnmount() {
+      this.refs.list.removeEventListener(collectionEvents.ITEM_CREATED, this.getData);
+      this.refs.list.removeEventListener(collectionEvents.ITEM_UPDATED, this.getData);
+      this.refs.list.removeEventListener(collectionEvents.PAGE_BACKWARDS, this.pageBack);
+      this.refs.list.removeEventListener(collectionEvents.PAGE_FORWARDS, this.pageForward);
+      this.refs.list.removeEventListener(collectionEvents.UPDATE_MAX_ITEMS, this.updateMaxItems);
+      this.refs.list.removeEventListener(collectionEvents.REORDER, this.reorderItems);
+      this.refs.list.removeEventListener(collectionEvents.FILTER, this.filterItems);
+      this.refs.list.removeEventListener(collectionEvents.NAVIGATE, this.navigate);
+      this.refs.list.removeEventListener(collectionEvents.RELATIVE_PATH, this.setRelativePath);
+
       if (this.props.useHash)
       {
          window.removeEventListener("hashchange", this.updateHash);
