@@ -1,0 +1,24 @@
+.components_views_Carousel {
+
+}
+
+.components_views_Carousel__frame {
+   overflow: hidden;
+}
+
+.components_views_Carousel__container {
+   display: flex;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   position: relative;
+   left: 0%;
+   transition: left .5s cubic-bezier(0, 1, .75, 1.01);
+}
+
+.components_views_Carousel__item {
+   flex: 1 0 100%;
+   flex-direction: column;
+   align-items: center;
+   display: flex;
+}

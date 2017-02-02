@@ -17,9 +17,9 @@ const FilmStrip = React.createClass({
                   
                   <BreadcrumbTrail/>
 
-                  <Carousel>
-                     <Property property="name" navigation={true}></Property><br></br>
-                     <Thumbnail></Thumbnail>
+                  <Carousel frameHeight="200px">
+                     <Property property="name" navigation={true}></Property>
+                     <Thumbnail renditionId="imgpreview"></Thumbnail>
                   </Carousel>
                   
                </Collection>

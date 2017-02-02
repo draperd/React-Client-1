@@ -1,0 +1,8 @@
+.components_renderers_Thumbnail {
+   display: flex;
+}
+
+.components_renderers_Thumbnail__img {
+   max-width: 100%;
+   object-fit: contain;
+}

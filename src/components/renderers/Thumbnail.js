@@ -1,9 +1,21 @@
+/**
+ * @module
+ */
 import React from "react";
 import { get } from "lodash";
 import xhr from "../../utilities/Xhr";
+import "./css/Thumbnail.css";
 
+/**
+ * @class
+ */
 class Thumbnail extends React.Component {
 
+   /**
+    * 
+    * @instance
+    * @return {JSX}
+    */
    render() {
 
       let thumbnail;
@@ -33,7 +45,9 @@ class Thumbnail extends React.Component {
          if (hasRendition)
          {
             src = `/api/-default-/public/alfresco/versions/1/nodes/${id}/renditions/${renditionId}/content?&alf_ticket=${localStorage.ticket}`;
-            thumbnail = <img src={src} role="presentation" />
+            thumbnail = <img className="components_renderers_Thumbnail__img"
+                             src={src} 
+                             role="presentation" />
          }
          else
          {
@@ -52,7 +66,7 @@ class Thumbnail extends React.Component {
       }
 
       return (
-         <span>{thumbnail}</span>
+         <span className="components_renderers_Thumbnail">{thumbnail}</span>
       );
    }
 }

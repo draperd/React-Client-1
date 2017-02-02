@@ -1,31 +1,39 @@
+/**
+ * @module
+ */
 import React from "react";
 import { collectionEvents } from "../containers/Collection";
+import "./css/Carousel.css";
 
-const CarouselStyle = {
-   frame: {
-      overflow: "hidden"
-   },
-   carousel: {
-      display: "flex",
-      listStyle: "none",
-      margin: 0,
-      padding: 0,
-      position: "relative",
-      left: "0%",
-      transition: "left .5s cubic-bezier(0, 1, .75, 1.01)"
-   },
-   carouselSeat: {
-      flex: "1 0 100%"
-   }
-};
-
+/**
+ * @class
+ */
 class Carousel extends React.Component {
 
+   /**
+    * @constructor
+    * @param {object} props
+    * @param {string} [props.frameHeight="auto"] The height of the frame containing the carousel
+    * @param {string} [props.frameWidth="auto"] The width of the frame that shows each item in the carousel
+    */
    constructor(props) {
       super(props);
       this.showLast = false;
+
+      this.style = {
+         frame: {
+            width: props.frameWidth || "auto"
+         },
+         container: {
+            height: props.frameHeight || "auto"
+         }
+      };
    }
 
+   /**
+    * 
+    * @instance
+    */
    componentDidMount() {
       this.refs.componentNode.addEventListener(collectionEvents.ITEM_CREATED, this.resetCarousel.bind(this));
       this.refs.componentNode.addEventListener(collectionEvents.ITEM_UPDATED, this.resetCarousel.bind(this));
@@ -36,10 +44,18 @@ class Carousel extends React.Component {
       this.refs.componentNode.addEventListener(collectionEvents.RELATIVE_PATH, this.resetCarousel.bind(this));
    }
 
+   /**
+    * 
+    * @instance
+    */
    resetCarousel() {
       this.showLast = false;
    }
 
+   /**
+    * 
+    * @instance
+    */
    componentDidUpdate() {
       if (!this.showLast)
       {
@@ -51,6 +67,10 @@ class Carousel extends React.Component {
       }
    }
 
+   /**
+    * 
+    * @instance
+    */
    pageBack() {
       let changeEvent = new CustomEvent(collectionEvents.PAGE_BACKWARDS, {
          bubbles: true
@@ -58,6 +78,10 @@ class Carousel extends React.Component {
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
+   /**
+    * 
+    * @instance
+    */
    pageForward() {
       let changeEvent = new CustomEvent(collectionEvents.PAGE_FORWARDS, {
          bubbles: true
@@ -65,6 +89,10 @@ class Carousel extends React.Component {
       this.refs.componentNode.dispatchEvent(changeEvent);
    }
 
+   /**
+    * 
+    * @instance
+    */
    next() {
       let nextLeft = ((parseInt(this.refs.carousel.style.left, 10) / 100) - 1) * 100;
       if (nextLeft > (this.props.list.pagination.count) * -100)
@@ -78,6 +106,10 @@ class Carousel extends React.Component {
       }
    }
 
+   /**
+    * 
+    * @instance
+    */
    previous() {
       let nextLeft = ((parseInt(this.refs.carousel.style.left, 10) / 100) + 1) * 100;
       if (nextLeft <= 0)
@@ -91,6 +123,10 @@ class Carousel extends React.Component {
       }
    }
 
+   /**
+    * 
+    * @instance
+    */
    render() {
       let body = this.props.list.entries.map((entry) => {
          const childrenWithProps = React.Children.map(this.props.children, (child) => {
@@ -99,16 +135,16 @@ class Carousel extends React.Component {
             })
          });
          return (
-            <li style={CarouselStyle.carouselSeat} key={entry.entry.id}>
+            <li className="components_views_Carousel__item" key={entry.entry.id}>
                {childrenWithProps}
             </li>
          );
       });
 
       return ( 
-         <div ref="componentNode">
-            <div style={CarouselStyle.frame}>
-               <ul ref="carousel" style={CarouselStyle.carousel}>
+         <div className="components_views_Carousel" ref="componentNode">
+            <div className="components_views_Carousel__frame" style={this.style.frame}>
+               <ul className="components_views_Carousel__container" ref="carousel" style={this.style.container}>
                   {body}
                </ul>
             </div>
