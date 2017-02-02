@@ -178,15 +178,35 @@ class Collection extends React.Component {
 
       if (this.props.useHash)
       {
-         window.addEventListener("hashchange", (event) => {
-            const parsedHash = queryString.parse(window.location.hash);
-            this.setState({
-               relativePath: parsedHash.relativePath || "/"
-            }, () => {
-               this.getData();
-            });
-         });
+         this.updateHash = this.updateHash.bind(this);
+         window.addEventListener("hashchange", this.updateHash);
       }
+   }
+
+   /**
+    * 
+    * 
+    * @instance
+    */
+   componentWillUnmount() {
+      if (this.props.useHash)
+      {
+         window.removeEventListener("hashchange", this.updateHash);
+      }
+   }
+
+   /**
+    * Handles changes to the URL hash (when useHash is true) to update the relative path displayed.
+    *
+    * @instance
+    */
+   updateHash() {
+      const parsedHash = queryString.parse(window.location.hash);
+      this.setState({
+         relativePath: parsedHash.relativePath || "/"
+      }, () => {
+         this.getData();
+      });
    }
 
    /**
