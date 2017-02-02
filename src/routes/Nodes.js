@@ -80,7 +80,7 @@ const Nodes = React.createClass({
 
                         <TableViewBody>
                            <TableCell >
-                              <Thumbnail></Thumbnail>
+                              <Thumbnail width="32px"></Thumbnail>
                            </TableCell>
                            <TableCell property="name" navigation={true} view={true}/>
                            <TableCell property="createdByUser.displayName" />

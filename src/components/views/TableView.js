@@ -10,10 +10,19 @@ class TableView extends React.Component {
          relations: this.props.relations
       }));
 
-      return ( 
-         <table ref="componentNode" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-            {childrenWithProps}
-         </table>);
+      if (this.props.list.entries.length)
+      {
+         return ( 
+            <table ref="componentNode" className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+               {childrenWithProps}
+            </table>);
+      }
+      else
+      {
+         return (
+            <div>No items</div>
+         );
+      }
    }
 }
 
