@@ -27,6 +27,7 @@ import FilmStrip from "./routes/FilmStrip";
 import Sites from "./routes/Sites";
 import Tags from "./routes/Tags";
 import LiveSearch from "./routes/LiveSearch";
+import Search from "./routes/Search";
 
 // A simple function used to ensure that the main routes cannot be accessed by 
 // unauthenticated users. If the user is not logged in then they will be automatically
@@ -54,6 +55,7 @@ render((
          <Route path="filmstrip" component={FilmStrip} onEnter={requireAuth} />
          <Route path="sites" component={Sites} onEnter={requireAuth} />
          <Route path="tags" component={Tags} onEnter={requireAuth} />
+         <Route path="search" component={Search} onEnter={requireAuth} />
          <Route path="node/:id" component={NodeDetails} onEnter={requireAuth} />
       </Route>
    </Router>
