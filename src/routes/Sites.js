@@ -19,29 +19,29 @@ const FilmStrip = React.createClass({
             <Collection url="/api/-default-/public/alfresco/versions/1/sites" relations="containers,members">
                <TableView>
 
-                     <TableViewHead> 
-                        <TableHeading label="ID" />
-                        <TableHeading label="Name" />
-                        <TableHeading label="Actions" />
-                     </TableViewHead>
+                  <TableViewHead> 
+                     <TableHeading label="ID" />
+                     <TableHeading label="Name" />
+                     <TableHeading label="Actions" />
+                  </TableViewHead>
 
-                     <TableViewBody>
-                        <TableCell property="id"/>
-                        <TableCell property="title"/>
-                        <TableCell>
-                           <Delete url="/api/-default-/public/alfresco/versions/1/sites"></Delete>
-                        </TableCell>
+                  <TableViewBody>
+                     <TableCell property="id"/>
+                     <TableCell property="title"/>
+                     <TableCell>
+                        <Delete url="/api/-default-/public/alfresco/versions/1/sites"></Delete>
+                     </TableCell>
 
-                     </TableViewBody>
-                     
-                     <TableViewFoot>
-                        <TableCell colspan="3" >
-                           <Pagination />
-                        </TableCell>
-                     </TableViewFoot>
+                  </TableViewBody>
+                  
+                  <TableViewFoot>
+                     <TableCell colspan="3" >
+                        <Pagination />
+                     </TableCell>
+                  </TableViewFoot>
 
-                  </TableView>
-               </Collection>
+               </TableView>
+            </Collection>
 
          </Content>
       );

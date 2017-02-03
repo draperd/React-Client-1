@@ -15,14 +15,14 @@ const FilmStrip = React.createClass({
                         orderBy="name"
                         include="properties">
                   
-                  <BreadcrumbTrail/>
+               <BreadcrumbTrail/>
 
-                  <Carousel frameHeight="300px">
-                     <Property property="name" navigation={true}></Property>
-                     <Thumbnail renditionId="imgpreview"></Thumbnail>
-                  </Carousel>
-                  
-               </Collection>
+               <Carousel frameHeight="300px">
+                  <Property property="name" navigation={true}></Property>
+                  <Thumbnail renditionId="imgpreview"></Thumbnail>
+               </Carousel>
+               
+            </Collection>
 
          </Content>
       );
