@@ -255,7 +255,7 @@ class Collection extends React.Component {
       {
          this.setState({
             skipCount: 0,
-            orderDirection: this.state.orderDirection === "ASC" ? "DESC" : "ASC"
+            orderDirection: this.state.orderDirection === "ASC" ? "ASC" : "DESC"
          }, () => {
             let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}`;
             xhr.get(url)
