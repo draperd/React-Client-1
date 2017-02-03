@@ -365,7 +365,6 @@ class Collection extends React.Component {
       if (event && event.detail && event.detail.entry.isFolder)
       {
          let relativePath = `${this.state.relativePath}${event.detail.entry.name}/`;
-         let filter = `${this.state.filter}`;
          if (this.props.useHash)
          {
             window.history.pushState(null, null, "#relativePath=" + relativePath);
