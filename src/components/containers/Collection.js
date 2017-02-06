@@ -96,11 +96,11 @@ class Collection extends React.Component {
     * 
     * @constructor
     * @param {object} props
-    * @param {string} [props.url="/api/-default-/public/alfresco/versions/1/people"] The URL to use when making data requests
-    * @param {string} [props.filterUrl="/api/-default-/public/alfresco/versions/1/queries/people"] The URL to use when filtering the displayed data
+    * @param {string} [props.url=""] The URL to use when making data requests
+    * @param {string} [props.filterUrl=""] The URL to use when filtering the displayed data
     * @param {number} [props.skipCount=0] The number of items to skip over when requesting data (used for pagination)
     * @param {number} [props.maxItems=5] The maximum number of items to retrieve (essentially the page size)
-    * @param {string} [props.orderBy="id"] The property to initially order the results by
+    * @param {string} [props.orderBy=""] The property to initially order the results by
     * @param {string} [props.orderDirection="ASC"] The direction to initially order results in, must be either "ASC" or "DESC"
     * @param {string} [props.relativePath="/"] Any relative path to apply (applies when retrieving data from a hierarchy, e.g. Nodes)
     * @param {string} [props.include=""] Additional data to include in the retrieved data (see the API used for details of what is available)
@@ -111,8 +111,8 @@ class Collection extends React.Component {
    constructor(props) {
       super(props);
 
-      this.url = props.url || "/api/-default-/public/alfresco/versions/1/people";
-      this.filterUrl = props.filterUrl || "/api/-default-/public/alfresco/versions/1/queries/people";
+      this.url = props.url || "";
+      this.filterUrl = props.filterUrl || "";
       this.include = props.include ? `&include=${props.include}` : "";
       this.relations = props.relations ? `&relations=${props.relations}` : "";
       this.includeSource = (props.includeSource && props.includeSource.toString().toLowerCase() === "true") ? "&includeSource=true" : "";
@@ -121,7 +121,7 @@ class Collection extends React.Component {
          skipCount: props.skipCount || 0,
          maxItems: props.maxItems || 5,
          relativePath: props.relativePath || "/",
-         orderBy: props.orderBy || "id",
+         orderBy: props.orderBy || "",
          orderDirection: props.orderDirection === "DESC" ? "DESC" : "ASC",
          list: {
             entries: [],
@@ -233,14 +233,17 @@ class Collection extends React.Component {
     * @instance
     */
    getData() {
-      let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}${this.relations}${this.includeSource}`;
-      xhr.get(url)
-         .then(response => {
-            this.setState({
-               list: response.data.list,
-               relations: response.data.relations || {}
+      if (this.url)
+      {
+         let url = `${this.url}?relativePath=${this.state.relativePath}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}${this.state.orderBy ? `&orderBy=${this.state.orderBy} ${this.state.orderDirection} ` : ""}${this.include}${this.relations}${this.includeSource}`;
+         xhr.get(url)
+            .then(response => {
+               this.setState({
+                  list: response.data.list,
+                  relations: response.data.relations || {}
+               });
             });
-         });
+      }
    }
 
    /**
@@ -257,7 +260,7 @@ class Collection extends React.Component {
             skipCount: 0,
             orderDirection: this.state.orderDirection === "ASC" ? "ASC" : "DESC"
          }, () => {
-            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}&orderBy=${this.state.orderBy} ${this.state.orderDirection} ${this.include}`;
+            let url = `${this.filterUrl}?term=${event.detail.term}&skipCount=${this.state.skipCount}&maxItems=${this.state.maxItems}${this.state.orderBy ? `&orderBy=${this.state.orderBy} ${this.state.orderDirection} ` : ""}${this.include}`;
             xhr.get(url)
                .then(response => {
                   this.setState({
