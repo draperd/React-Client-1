@@ -11,7 +11,9 @@ const Users = React.createClass({
    render() {
       return (
          <Content>
-            <Collection skipCount={0}
+            <Collection url="/api/-default-/public/alfresco/versions/1/people"
+                        filterUrl="/api/-default-/public/alfresco/versions/1/queries/people"
+                        skipCount={0}
                         maxItems={10}
                         orderBy="firstName"
                         orderDirection="DESC">

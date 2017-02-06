@@ -20,7 +20,6 @@ class LiveSearch extends React.Component {
          <Content>
             <Collection skipCount={0}
                         maxItems={10}
-                        orderBy="name"
                         filterUrl="/api/-default-/public/alfresco/versions/1/queries/nodes" 
                         include="properties"
                         useHash="true">
