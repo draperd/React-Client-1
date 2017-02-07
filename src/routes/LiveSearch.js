@@ -12,10 +12,15 @@ import Thumbnail from "../components/renderers/Thumbnail";
 import Property from "../components/renderers/Property";
 import Pagination from "../components/controls/Pagination";
 import Filter from "../components/controls/Filter";
+import DebouncedFilter from "../components/controls/DebouncedFilter";
+
+import "./css/Nodes.css";
+import "./css/LiveSearch.css";
 
 class LiveSearch extends React.Component {
 
    render() {
+      let DBFilter = DebouncedFilter(Filter);
       return (
          <Content>
             <Collection skipCount={0}
@@ -23,7 +28,7 @@ class LiveSearch extends React.Component {
                         filterUrl="/api/-default-/public/alfresco/versions/1/queries/nodes" 
                         include="properties"
                         useHash="true">
-                <Filter />
+                <DBFilter focus="true"/>
                 <TableView>
 
                     <TableViewHead> 
@@ -35,7 +40,7 @@ class LiveSearch extends React.Component {
 
                     <TableViewBody>
                         <TableCell>
-                            <Thumbnail width="32px"></Thumbnail>
+                            <Thumbnail width="64px"></Thumbnail>
                         </TableCell>
                         <TableCell property="name" navigation={true} view={true}/>
                         <TableCell property="createdByUser.displayName" />

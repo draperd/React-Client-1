@@ -3,14 +3,12 @@ import React from "react";
 class Layout extends React.Component {
 
    componentDidMount() {
-      // window.componentHandler.upgradeElement(this.refs.componentNode);
       window.componentHandler.upgradeDom();
    }
 
    componentDidUpdate(prevProps, prevState) {
       window.componentHandler.upgradeDom();
    }
-
 
    render() {
       return (

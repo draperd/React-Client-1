@@ -13,7 +13,7 @@ class Delete extends React.Component {
    constructor(props) {
       super(props);
 
-      this.dialogTitle = props.dialogTitle || "Delete?";
+      this.dialogTitle = props.dialogTitle || "Delete";
       this.dialogPrompt = props.dialogTitle || "Are you sure?";
       this.url = (props.url || "/api/-default-/public/alfresco/versions/1/people") + "/" + this.props.item.entry.id;
    }

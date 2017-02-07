@@ -21,10 +21,10 @@ import TableView from "../components/views/TableView";
 import TableViewHead from "../components/views/TableViewHead";
 import TableViewBody from "../components/views/TableViewBody";
 import TableViewFoot from "../components/views/TableViewFoot";
-
 import UploadTarget from "../components/upload/UploadTarget";
-
 import Content from "../components/layouts/Content";
+
+import "./css/Nodes.css";
 
 const Nodes = React.createClass({
 
@@ -74,21 +74,18 @@ const Nodes = React.createClass({
                            <TableHeading label="Name" orderById="name" />
                            <TableHeading label="Created By" orderById="createdByUser.displayName" />
                            <TableHeading label="Created On" orderById="createdAt" />
-                           <TableHeading label="Is Folder"/>
-                           <TableHeading/>
+                           <TableHeading label="Actions" />
                         </TableViewHead>
 
                         <TableViewBody>
                            <TableCell >
-                              <Thumbnail width="32px"></Thumbnail>
+                              <Thumbnail width="64px"></Thumbnail>
                            </TableCell>
                            <TableCell property="name" navigation={true} view={true}/>
                            <TableCell property="createdByUser.displayName" />
                            <TableCell>
                               <Property property="createdAt" renderAs="DATE"></Property>
                            </TableCell>
-                           <TableCell property="isFolder" />
-                           
                            <TableCell>
                               <Delete url="/api/-default-/public/alfresco/versions/1/nodes/" />
                            </TableCell>
@@ -96,7 +93,7 @@ const Nodes = React.createClass({
                         </TableViewBody>
                         
                         <TableViewFoot>
-                           <TableCell colspan="6">
+                           <TableCell colspan="5">
                               <Pagination />
                            </TableCell>
                         </TableViewFoot>
