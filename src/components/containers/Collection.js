@@ -119,7 +119,7 @@ class Collection extends React.Component {
 
       this.state = {
          skipCount: props.skipCount || 0,
-         maxItems: props.maxItems || 5,
+         maxItems: props.maxItems || 10,
          relativePath: props.relativePath || "/",
          orderBy: props.orderBy || "",
          orderDirection: props.orderDirection === "DESC" ? "DESC" : "ASC",
@@ -127,7 +127,7 @@ class Collection extends React.Component {
             entries: [],
             pagination: {
                skipCount: 0,
-               maxItems: 5
+               maxItems: 0
             }
          },
          relations: {}

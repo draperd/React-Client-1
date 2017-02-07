@@ -33,7 +33,7 @@ const SearchScreen = React.createClass({
 
                   <TableViewBody>
                      <TableCell >
-                        <Thumbnail width="32px"></Thumbnail>
+                        <Thumbnail width="64px"></Thumbnail>
                      </TableCell>
                      <TableCell property="name" navigation={true} view={true}/>
                      <TableCell property="createdByUser.displayName" />

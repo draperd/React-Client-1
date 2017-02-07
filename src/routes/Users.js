@@ -5,6 +5,7 @@ import Collection from "../components/containers/Collection";
 import Filter from "../components/controls/Filter";
 import UserTableView from "../components/views/UserTableView";
 import Content from "../components/layouts/Content";
+import Toolbar from "../components/layouts/Toolbar";
 
 const Users = React.createClass({
 
@@ -17,7 +18,9 @@ const Users = React.createClass({
                         maxItems={10}
                         orderBy="firstName"
                         orderDirection="DESC">
-               <CreateUserButton/>
+               <Toolbar>
+                  <CreateUserButton/>
+               </Toolbar>
                <Filter />
                <UserTableView />
             </Collection>

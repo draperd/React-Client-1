@@ -20,7 +20,7 @@ class TableView extends React.Component {
       else
       {
          return (
-            <div>No items</div>
+            <div style={{paddingLeft: "15px"}}>No items</div>
          );
       }
    }

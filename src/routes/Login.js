@@ -12,8 +12,8 @@ const Login = withRouter(
   React.createClass({
 
    componentDidMount() {
-      // window.componentHandler.upgradeElement(this.refs.componentNode);
       window.componentHandler.upgradeDom();
+      this.refs.username.focus();
    },
 
    getInitialState() {
@@ -55,7 +55,7 @@ const Login = withRouter(
                <div className="mdl-card mdl-shadow--6dp">
                   <form onSubmit={this.handleSubmit}>
                      <div className="mdl-card__title mdl-color--primary mdl-color-text--white">
-                        <h2 className="mdl-card__title-text">Alfresco Administration Console</h2>
+                        <h2 className="mdl-card__title-text">Alfresco</h2>
                      </div>
                      <div className="mdl-card__supporting-text">
                            <div className="mdl-textfield mdl-js-textfield">

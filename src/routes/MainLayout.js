@@ -36,7 +36,7 @@ class MainLayout extends React.Component {
    render() {
       return (
          <Layout ref="componentNode">
-            <Header title="Alfresco Administration Console">
+            <Header title="Alfresco">
                <div className="mdl-layout-spacer"></div>
                <LogoutButton />
             </Header>

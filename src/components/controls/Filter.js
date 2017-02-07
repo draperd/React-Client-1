@@ -3,6 +3,13 @@ import { collectionEvents } from "../containers/Collection";
 
 class Filter extends React.Component {
 
+   componentDidMount() {
+      if (this.props.focus)
+      {
+         this.refs.filterField.focus();
+      }
+   }
+
    onChange(event) {
       var changeEvent = new CustomEvent(collectionEvents.FILTER, {
          detail: {
@@ -17,7 +24,8 @@ class Filter extends React.Component {
       return (
          <div ref="componentNode"
               className="mdl-textfield mdl-js-textfield">
-            <input className="mdl-textfield__input" 
+            <input ref="filterField"
+                   className="mdl-textfield__input" 
                    type="text" 
                    id="filter" 
                    onChange={this.onChange.bind(this)}/>

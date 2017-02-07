@@ -65,6 +65,7 @@ class Thumbnail extends React.Component {
          {
             src = `/api/-default-/public/alfresco/versions/1/nodes/${id}/renditions/${renditionId}/content?&alf_ticket=${localStorage.ticket}`;
             thumbnail = <img className="components_renderers_Thumbnail__img"
+                             width={this.width}
                              src={src} 
                              role="presentation" />
          }

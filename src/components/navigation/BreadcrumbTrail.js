@@ -1,5 +1,7 @@
 import React from "react";
 import { collectionEvents } from "../containers/Collection";
+import "./css/Breadcrumb.css";
+
 const BreadcrumbUtil = require("alfresco-js-utils/dist/utils/navigation/Breadcrumbs");
 
 class BreadcrumbTrail extends React.Component {
@@ -34,13 +36,15 @@ class BreadcrumbTrail extends React.Component {
    }
 
    render() {
-      return (<nav ref="componentNode" role="navigation">
-         <p id="breadcrumblabel">You are here:</p>
-         <ol id="breadcrumb" aria-labelledby="breadcrumblabel">{this.state.breadcrumbs.map((breadcrumb) => 
-            <li key={breadcrumb.relativePath}
-                role="link" 
-                onClick={() => this.navigate(breadcrumb.relativePath)}>{breadcrumb.label}</li>)}</ol>
-      </nav>)
+      return (
+         <nav ref="componentNode" role="navigation" className="alfresco_components_navigation_Breadcrumb">
+            <p id="breadcrumblabel">Location:</p>
+            <ol id="breadcrumb" aria-labelledby="breadcrumblabel">{this.state.breadcrumbs.map((breadcrumb) => 
+               <li key={breadcrumb.relativePath}
+                   role="link" 
+                   onClick={() => this.navigate(breadcrumb.relativePath)}>{breadcrumb.label}</li>)}
+            </ol>
+         </nav>)
    }
 }
 
