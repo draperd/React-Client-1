@@ -1,0 +1,16 @@
+.page-content .mdl-textfield {
+    margin-left: 25px;
+}
+
+.page-content .mdl-data-table {
+    width: 100%;
+}
+
+.page-content .mdl-data-table td {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.page-content .mdl-data-table td:first-of-type {
+    width: 110px;
+}
