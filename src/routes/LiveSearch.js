@@ -14,8 +14,7 @@ import Pagination from "../components/controls/Pagination";
 import Filter from "../components/controls/Filter";
 import DebouncedFilter from "../components/controls/DebouncedFilter";
 
-import "./css/Nodes.css";
-import "./css/LiveSearch.css";
+import "./css/PageContent.css";
 
 class LiveSearch extends React.Component {
 

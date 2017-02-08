@@ -24,7 +24,7 @@ import TableViewFoot from "../components/views/TableViewFoot";
 import UploadTarget from "../components/upload/UploadTarget";
 import Content from "../components/layouts/Content";
 
-import "./css/Nodes.css";
+import "./css/PageContent.css";
 
 const Nodes = React.createClass({
 
