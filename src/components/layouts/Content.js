@@ -18,7 +18,7 @@ class Content extends React.Component {
    render() {
       return (
          <main className="mdl-layout__content">
-            <div className="page-content" id={this.props.htmlid}>
+            <div className="page-content" id={this.props.id}>
                {this.props.children}
             </div>
          </main>
