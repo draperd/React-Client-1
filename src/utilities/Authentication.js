@@ -48,10 +48,11 @@ export default {
 
    logout() {
       return new Promise((resolve) => {
-         delete localStorage.ticket;
+         
 
          axios.delete("/api/-default-/public/authentication/versions/1/tickets/-me-", this.getAxiosConfig())
             .then(response => {
+               delete localStorage.ticket;
                this.onChange(false);
                resolve(true);
             });
