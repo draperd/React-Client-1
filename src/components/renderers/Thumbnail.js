@@ -20,6 +20,7 @@ class Thumbnail extends React.Component {
    constructor(props) {
       super(props);
       this.width = props.width || "100%";
+      this.height = props.height;
    }
 
    /**
@@ -37,13 +38,13 @@ class Thumbnail extends React.Component {
       }
       else if (this.props.item.entry.isFolder)
       {
-
-         thumbnail = <svg className="components_renderers_Thumbnail__img" 
-                          width={this.width} 
-                          height={this.width}
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 16 16"
-                          style={ { width: "100%" } }>
+         thumbnail = 
+            <svg className="components_renderers_Thumbnail__img" 
+                 width={this.width} 
+                 height={this.width}
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 style={ { width: this.width } }>
             <path fill="#000000" d="M7 2l2 2h7v11h-16v-13z"></path>
          </svg>;
       }
@@ -64,10 +65,12 @@ class Thumbnail extends React.Component {
          if (hasRendition)
          {
             src = `/api/-default-/public/alfresco/versions/1/nodes/${id}/renditions/${renditionId}/content?&alf_ticket=${localStorage.ticket}`;
-            thumbnail = <img className="components_renderers_Thumbnail__img"
-                             width={this.width}
-                             src={src} 
-                             role="presentation" />
+            thumbnail = <div style={{width: this.width, height: this.height||"auto", overflow: "hidden", display: "flex"}}>
+                            <img className="components_renderers_Thumbnail__img"
+                                 width={this.width}
+                                 src={src} 
+                                 role="presentation" />
+                        </div>
          }
          else
          {
