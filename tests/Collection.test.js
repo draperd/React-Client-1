@@ -130,9 +130,10 @@ it ("handles page forwards", () => {
          }
          catch(e)
          {
+            // Failed assertions will throw an exception, we need to reject the promise
+            // passing the exception as the reason...
             reject(e);
          }
-         
-      }, 500);
+      });
    });
 })
