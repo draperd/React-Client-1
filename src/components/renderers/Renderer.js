@@ -72,6 +72,33 @@ class Renderer extends React.Component {
     * 
     * @instance
     * @param  {object} input
+    * @param  {string} input.value The string value to render as a numeric size in Bytes, KB, MB or GB
+    * @return {string} A formatted size
+    */
+   renderAsSIZE(input) {
+      const KB = 1024;
+      const MB = 1048576;
+      const GB = 1073741824;
+      let num = Number.parseInt(input.value,10);
+
+      if (num < KB) {
+         return num + " bytes";
+      }
+      else if (num < MB) {
+         return (num/KB).toFixed(2) + " KB";
+      }
+      else if (num < GB) {
+         return (num/MB).toFixed(2) + " MB";
+      }
+      else {
+         return (num/GB).toFixed(2) + " GB";
+      }
+   }
+
+   /**
+    * 
+    * @instance
+    * @param  {object} input
     * @param  {string} input.value The string value of the property
     * @param  {string} input.renderAs An identifer for how the value should be rendered
     * @return {string} The processed property value
