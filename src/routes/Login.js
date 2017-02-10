@@ -2,6 +2,15 @@ import React from "react";
 import { withRouter } from "react-router";
 import auth from "../utilities/Authentication";
 
+import { injectIntl, defineMessages} from "react-intl";
+
+const messages = defineMessages({
+   userName: {
+      id: "routes.login.userName",
+      defaultMessage: "Username",
+   }
+});
+
 const loginBoxStyle = {
    display: "flex",
    alignItems: "center",
@@ -60,7 +69,7 @@ const Login = withRouter(
                      <div className="mdl-card__supporting-text">
                            <div className="mdl-textfield mdl-js-textfield">
                               <input ref="username" className="mdl-textfield__input" type="text" id="username" />
-                              <label className="mdl-textfield__label" htmlFor="username">Username</label>
+                              <label className="mdl-textfield__label" htmlFor="username">{this.props.intl.formatMessage(messages.userName)}</label>
                            </div>
                            <div className="mdl-textfield mdl-js-textfield">
                               <input ref="pass" className="mdl-textfield__input" type="password" id="userpass" />
@@ -86,4 +95,4 @@ const Login = withRouter(
   })
 )
 
-export default Login;
+export default injectIntl(Login);

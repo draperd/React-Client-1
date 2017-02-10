@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
 import { browserHistory, Router, Route, IndexRoute } from "react-router";
+import { IntlProvider } from "react-intl";
 
 // Importing Material Design Lite CSS and JS dependencies to provide the UX for
 // the application...
@@ -45,18 +46,20 @@ function requireAuth(nextState, replace) {
 // You can add your own routes within the MainLayout (if you want a link to your route
 // to appear in the navigation drawer then you should edit MainLayout.js to add the link)....
 render((
-   <Router history={browserHistory}>
-      <Route path="login" component={Login} />
-      <Route path="/" component={MainLayout} onEnter={requireAuth}>
-         <IndexRoute component={Nodes} onEnter={requireAuth} />
-         <Route path="nodes" component={Nodes} onEnter={requireAuth} />
-         <Route path="livesearch" component={LiveSearch} onEnter={requireAuth} />
-         <Route path="users" component={Users} onEnter={requireAuth} />
-         <Route path="filmstrip" component={FilmStrip} onEnter={requireAuth} />
-         <Route path="sites" component={Sites} onEnter={requireAuth} />
-         <Route path="tags" component={Tags} onEnter={requireAuth} />
-         <Route path="search" component={Search} onEnter={requireAuth} />
-         <Route path="node/:id" component={NodeDetails} onEnter={requireAuth} />
-      </Route>
-   </Router>
+   <IntlProvider locale="en">
+      <Router history={browserHistory}>
+         <Route path="login" component={Login} />
+         <Route path="/" component={MainLayout} onEnter={requireAuth}>
+            <IndexRoute component={Nodes} onEnter={requireAuth} />
+            <Route path="nodes" component={Nodes} onEnter={requireAuth} />
+            <Route path="livesearch" component={LiveSearch} onEnter={requireAuth} />
+            <Route path="users" component={Users} onEnter={requireAuth} />
+            <Route path="filmstrip" component={FilmStrip} onEnter={requireAuth} />
+            <Route path="sites" component={Sites} onEnter={requireAuth} />
+            <Route path="tags" component={Tags} onEnter={requireAuth} />
+            <Route path="search" component={Search} onEnter={requireAuth} />
+            <Route path="node/:id" component={NodeDetails} onEnter={requireAuth} />
+         </Route>
+      </Router>
+   </IntlProvider>
 ), document.getElementById('root'))

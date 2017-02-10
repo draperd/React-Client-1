@@ -6,6 +6,9 @@
   "devDependencies": {
     "alfresco-js-utils": "0.0.10",
     "axios": "^0.15.3",
+    "babel-cli": "^6.22.2",
+    "babel-plugin-react-intl": "^2.3.1",
+    "babel-preset-react-app": "^2.0.1",
     "chai": "^3.5.0",
     "docdash": "^0.4.0",
     "enzyme": "^2.7.1",
@@ -21,6 +24,7 @@
     "query-string": "^4.3.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-intl": "^2.2.3",
     "react-router": "^3.0.0"
   },
   "scripts": {
@@ -28,6 +32,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "translate": "NODE_ENV=production babel ./src >/dev/null"
   }
 }
