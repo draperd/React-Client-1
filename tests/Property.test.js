@@ -6,40 +6,8 @@ import Property from "../src/components/renderers/Property";
 import { collectionEvents } from "../src/components/containers/Collection";
 import { assert } from "chai";
 
-const item = {
-   entry: {
-      name: "Bob",
-      createdAt: "2017-02-10T14:34:41.441+0000"
-   }
-};
-
-
-class EventCatcher extends React.Component {
-
-   constructor(props) {
-      super(props);
-      this.state = {};
-   }
-
-   handleEvent(event) {
-      this.setState({
-         lastEvent: event
-      });
-   }
-
-   componentDidMount() {
-      this.refs.componentNode.addEventListener(this.props.event, this.handleEvent.bind(this));
-   }
-
-   render() {
-      return (
-         <div ref="componentNode">
-            {this.props.children}
-         </div>
-      );
-   }
-}
-
+import EventCatcher from "./components/EventCatcher";
+import item from "./data/SampleNode";
 
 it ("renders name correctly", () => {
    const property = mount(
@@ -59,7 +27,7 @@ it ("renders date correctly", () => {
 
 it ("does NOT emit navigate event on click unless navigation is configured to true", () => {
    const eventCatcher = mount(
-      <EventCatcher event={collectionEvents.NAVIGATE}>
+      <EventCatcher events={ [ collectionEvents.NAVIGATE ] }>
          <Property item={item} property="name" />
       </EventCatcher>);
 
@@ -72,7 +40,7 @@ it ("does NOT emit navigate event on click unless navigation is configured to tr
 
 it ("emits navigate event on click", () => {
    const eventCatcher = mount(
-      <EventCatcher event={collectionEvents.NAVIGATE} >
+      <EventCatcher events={ [ collectionEvents.NAVIGATE ] } >
          <Property item={item} navigation={true} property="name" />
       </EventCatcher>);
 

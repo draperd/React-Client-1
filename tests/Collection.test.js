@@ -9,22 +9,7 @@ import {assert} from "chai";
 import { fakeServer, match, spy} from "sinon";
 import { merge, clone } from "lodash";
 
-
-
-class Button extends React.Component {
-
-   emitEvent() {
-      let changeEvent = new CustomEvent(this.props.eventName, {
-         detail: this.props.eventDetail,
-         bubbles: true
-      });
-      this.refs.componentNode.dispatchEvent(changeEvent);
-   }
-
-   render() {
-      return (<button ref="componentNode" onClick={() => this.emitEvent()}>Test</button>);
-   }
-}
+import EventButton from "./components/EventButton";
 
 
 const fakeResponseHeaders = { "Content-Type": "application/json; charset=UTF-8" };
@@ -110,7 +95,7 @@ it ("handles page forwards", () => {
    // Mount the collection with a button to emit the page forward event...
    const collection = mount(
       <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children">
-         <Button eventName={collectionEvents.PAGE_FORWARDS} />
+         <EventButton eventName={collectionEvents.PAGE_FORWARDS} />
       </Collection>
    );
 
