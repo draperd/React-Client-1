@@ -4,7 +4,7 @@ export default {
 
    login(userId, password) {
       return new Promise((resolve) => {
-         if (localStorage.ticket) {
+         if (this.getTicket()) {
             // The user is already authenticated so nothing more is required...
             this.onChange(true);
             resolve(true);
@@ -22,9 +22,10 @@ export default {
                   // Authentication was successful so save the ticket in local storage
                   // and call onChange with an argument of true to indicate that authentication
                   // has been successful...
-                  localStorage.ticket = response.data.entry.id;
-                  this.onChange(true);
-                  resolve(true);
+                  const success = this.setTicket(response.data.entry.id);
+                  // localStorage.ticket = response.data.entry.id;
+                  this.onChange(success);
+                  resolve(success);
                }
                else
                {
@@ -43,24 +44,74 @@ export default {
    },
 
    getTicket() {
-      return localStorage.ticket;
+      let ticket;
+      try 
+      {
+         if (localStorage)
+         {
+            ticket = localStorage.ticket;
+         }
+      }
+      catch (e) 
+      {
+         // Worth doing anything here?
+      }
+      return ticket;
+   },
+
+   setTicket(ticket) {
+      let success = false;
+      try 
+      {
+         if (localStorage)
+         {
+            localStorage.ticket = ticket;
+            success = true;
+         }
+      }
+      catch (e) 
+      {
+      }
+      return success;
+   },
+
+   deleteTicket() {
+      try 
+      {
+         if (localStorage)
+         {
+            delete localStorage.ticket;
+         }
+      }
+      catch (e) 
+      {
+         // TODO: Worth doing anything here?
+      }
    },
 
    logout() {
       return new Promise((resolve) => {
-         delete localStorage.ticket;
-         this.onChange(false);
-         resolve(true);
+         axios.delete("/api/-default-/public/authentication/versions/1/tickets/-me-", this.getAxiosConfig())
+            .then(response => {
+               this.deleteTicket();
+               this.onChange(false);
+               resolve(true);
+            })
+            .catch(() => {
+               this.deleteTicket();
+               this.onChange(false);
+               resolve(false);
+            });
       });
    },
 
    loggedIn() {
-      return !!localStorage.ticket;
+      return !!this.getTicket();
    },
 
    getAxiosConfig() {
       return {
-         headers: { authorization: "Basic " + btoa(localStorage.ticket) }
+         headers: { authorization: "Basic " + btoa(this.getTicket()) }
       };
    },
 

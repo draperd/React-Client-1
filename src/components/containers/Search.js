@@ -72,13 +72,13 @@ class Search extends Collection {
                maxItems: this.state.maxItems,
                skipCount: this.state.skipCount
             },
-            sort: [
-               {
-                  type: "FIELD",
-                  field: this.state.orderBy,
-                  ascending: this.state.orderDirection === "ASC" ? "true" : "false"
-               }
-            ],
+            // sort: [
+            //    {
+            //       type: "FIELD",
+            //       field: this.state.orderBy,
+            //       ascending: this.state.orderDirection === "ASC" ? "true" : "false"
+            //    }
+            // ],
             filterQueries: [
                { "query": "cm:creator:admin"},
                { "query": "content.size:[0 TO 10240]"}
