@@ -6,11 +6,11 @@ import { collectionEvents } from "../src/components/containers/Collection";
 import xhr from "../src/utilities/Xhr";
 
 import {assert} from "chai";
-import { fakeServer, spy} from "sinon";
+import { fakeServer, match, spy} from "sinon";
 import { merge, clone } from "lodash";
 
 
-// collectionEvents.UPDATE_MAX_ITEMS PAGE_FORWARDS
+
 class Button extends React.Component {
 
    emitEvent() {
@@ -119,13 +119,13 @@ it ("handles page forwards", () => {
          try
          {
             // First call should not skip any items...
-            assert.include(xhr.get.getCall(0).args[0], "&skipCount=0");
+            assert.include(xhr.get.firstCall.args[0], "&skipCount=0");
 
             // Click the button to request the next page...
             collection.find("button").simulate("click");
 
             // A second call should skip 10 items...
-            assert.include(xhr.get.getCall(1).args[0], "&skipCount=10");
+            assert.include(xhr.get.secondCall.args[0], "&skipCount=10");
             resolve();
          }
          catch(e)
