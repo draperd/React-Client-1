@@ -5,7 +5,6 @@ import { browserHistory } from "react-router";
 export default {
 
    onError(error) {
-      console.log("Caught error", error);
       if (error.response.status === 401)
       {
          auth.logout();
@@ -14,7 +13,7 @@ export default {
    },
 
    get(url) {
-         return axios.get(url, auth.getAxiosConfig()).catch(error => this.onError(error));         
+      return axios.get(url, auth.getAxiosConfig()).catch(error => this.onError(error));
    },
 
    put(url, data) {

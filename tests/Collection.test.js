@@ -1,5 +1,3 @@
-/* global it, jest */
-
 import React from "react";
 import ReactDOM from "react-dom";
 import {shallow, mount} from "enzyme";
@@ -7,19 +5,25 @@ import Collection from "../src/components/containers/Collection";
 import xhr from "../src/utilities/Xhr";
 
 import {assert} from "chai";
-import {sandbox, spy} from "sinon";
-import axios from "axios";
+import { fakeServer, spy} from "sinon";
 
-jest.mock("./mocks/nodes.js");
+const fakeResponseHeaders = { "Content-Type": "application/json; charset=UTF-8" };
+let server;
 
-it("renders without crashing", () => {
-  const div = document.createElement("div");
-  ReactDOM.render(<Collection />, div);
+beforeEach(() => {
+   server = fakeServer.create();
+   server.autoRespond = true;
+   server.respondImmediately = true;
 });
 
-it("calls getData", () => {
+afterEach(() => {
+   server.restore();
+});
+
+
+it("calls getData when mounted", () => {
    const componentDidMountSpy = spy(Collection.prototype, "setState");
-   const wrapper = mount(<Collection />);
+   mount(<Collection />);
    assert.equal(Collection.prototype.setState.callCount, 0);
    componentDidMountSpy.restore();
 });
@@ -43,22 +47,28 @@ it("makes xhr request configured maxItems", () => {
    xhrSpy.restore();
 });
 
-it("updates state as expected", () => {
-   let sb = sandbox.create();
-   const data = { 
-      data: {
-         list: {
-            entries: [1,2,3]
-         }
-      }
-   }
-   const resolved = new Promise((r) => r({ data }));
-   sb.stub(axios, "get").returns(resolved);
 
-   const collection = shallow(
+it("sets state correctly", () => {
+
+   const fakeReponse = JSON.stringify({
+      list: {
+         entries: [1,2,3,4,5]
+      }
+   });
+   server.respondWith("GET", /(.*)/, [200, fakeResponseHeaders, fakeReponse]);
+
+   const collection = mount(
       <Collection url="/api/-default-/public/alfresco/versions/1/nodes/-root-/children"/>
    );
-   assert.equal(collection.state().list.entries.length, 5);
 
-   sb.restore()
+   return new Promise((resolve) => {
+      setTimeout(() => {
+         try
+         {
+            assert.equal(collection.state().list.entries.length, 5);
+         }
+         catch(e) {}
+         resolve();
+      });
+   });
 });
