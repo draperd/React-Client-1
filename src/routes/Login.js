@@ -4,15 +4,7 @@ import auth from "../utilities/Authentication";
 
 import { injectIntl } from "react-intl";
 import { merge } from "lodash";
-// import withI18n from "../components/abstract/withI18n";
 
-// const messages = defineMessages({
-//    userName: {
-//       id: "routes.login.userName",
-//       defaultMessage: "Username",
-//    }
-// });
-// 
 
 const loginBoxStyle = {
    display: "flex",
