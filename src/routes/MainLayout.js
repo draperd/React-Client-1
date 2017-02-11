@@ -9,6 +9,8 @@ import Layout from "../components/layouts/Layout";
 import Header from "../components/layouts/Header";
 import Drawer from "../components/layouts/Drawer";
 
+import { injectIntl } from "react-intl";
+
 /**
  * <p>This defines the main layout for the application. This is based on 
  * {@link https://material.io/guidelines/|Material Design} and
@@ -34,9 +36,10 @@ class MainLayout extends React.Component {
     * @instance
     */
    render() {
+      const title = this.props.intl.formatMessage({id:"global.test"});
       return (
          <Layout ref="componentNode">
-            <Header title="Alfresco">
+            <Header title={title}>
                <div className="mdl-layout-spacer"></div>
                <LogoutButton />
             </Header>
@@ -57,4 +60,4 @@ class MainLayout extends React.Component {
    }
 }
 
-export default MainLayout;
+export default injectIntl(MainLayout);

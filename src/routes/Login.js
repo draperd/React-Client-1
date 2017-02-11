@@ -2,14 +2,17 @@ import React from "react";
 import { withRouter } from "react-router";
 import auth from "../utilities/Authentication";
 
-import { injectIntl, defineMessages} from "react-intl";
+import { injectIntl } from "react-intl";
+import { merge } from "lodash";
+// import withI18n from "../components/abstract/withI18n";
 
-const messages = defineMessages({
-   userName: {
-      id: "routes.login.userName",
-      defaultMessage: "Username",
-   }
-});
+// const messages = defineMessages({
+//    userName: {
+//       id: "routes.login.userName",
+//       defaultMessage: "Username",
+//    }
+// });
+// 
 
 const loginBoxStyle = {
    display: "flex",
@@ -58,6 +61,39 @@ const Login = withRouter(
     },
 
     render() {
+
+      // The following code attempts to load the current message bundle for the current locale
+      // for this component. It first tries the main locale (i.e. "es-ES") then tries the 
+      // locale without the region code (i.e. "es") and finally falls back to the default
+      // locale (i.e. "en"). When a message bundle has been loaded the messages are merged
+      // into the main bundle.
+      // 
+      // TODO: This shouldn't be done for every call to render, there needs to be some 
+      //       singleton attribute or registry that ensures this is only done once for 
+      //       each component instance. 
+      //       
+      // TODO: Ideally we'd want to abstract this code, possibly to a HOC, but there are 
+      //       issues with handling the variable paths.
+      try 
+      {
+         const componentMessages = require(`./i18n/Login.${this.props.intl.locale}.json`);
+         merge(this.props.intl.messages, componentMessages);
+      }
+      catch (e) 
+      {
+         try 
+         {
+            const languageWithoutRegionCode = this.props.intl.locale.split(/[_-]+/)[0];
+            const componentMessages = require(`./i18n/Login.${languageWithoutRegionCode}.json`);
+            merge(this.props.intl.messages, componentMessages);
+         }
+         catch (e)
+         {
+            const componentMessages = require(`./i18n/Login.${this.props.intl.defaultLocale}.json`);
+            merge(this.props.intl.messages, componentMessages);
+         }
+      }
+
       return (
          <div ref="componentNode" className="mdl-layout mdl-js-layout">
             <main style={loginBoxStyle} className="mdl-layout__content">
@@ -69,7 +105,7 @@ const Login = withRouter(
                      <div className="mdl-card__supporting-text">
                            <div className="mdl-textfield mdl-js-textfield">
                               <input ref="username" className="mdl-textfield__input" type="text" id="username" />
-                              <label className="mdl-textfield__label" htmlFor="username">{this.props.intl.formatMessage(messages.userName)}</label>
+                              <label className="mdl-textfield__label" htmlFor="username">{this.props.intl.formatMessage({id:"routes.login.userName"})}</label>
                            </div>
                            <div className="mdl-textfield mdl-js-textfield">
                               <input ref="pass" className="mdl-textfield__input" type="password" id="userpass" />
@@ -88,8 +124,6 @@ const Login = withRouter(
                </div>
             </main>
          </div>
-
-        
       )
     }
   })
