@@ -1,25 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router";
 import auth from "../utilities/Authentication";
-
-import { injectIntl } from "react-intl";
-import { merge } from "lodash";
-
-// Import the language bundles that we know about...
-import en from "./i18n/Login.en.json";
-import es from "./i18n/Login.es.json";
-import esES from "./i18n/Login.es-ES.json";
-
-// Locale variable to the module to ensure that bundles are only merged once...
-let i18nMerged = false;
-
-// Create the i18n data (the appropriate data for the locale will be selected at runtime)...
-const i18nData = {
-   en: en,
-   es: es,
-   "es-ES": esES
-};
-
+import withI18n from "../components/abstract/withI18n";
 
 const loginBoxStyle = {
    display: "flex",
@@ -68,19 +50,6 @@ const Login = withRouter(
     },
 
     render() {
-
-      // Merge the locale bundle for this component. The default locale, the language
-      // and the region specific language are all merged so that more specific messages
-      // can override less specific (or missing) messages...
-      const languageWithoutRegionCode = this.props.intl.locale.split(/[_-]+/)[0];
-      if (!i18nMerged)
-      {
-         merge(this.props.intl.messages, i18nData[this.props.intl.defaultLocale] || {});
-         merge(this.props.intl.messages, i18nData[languageWithoutRegionCode] || {});
-         merge(this.props.intl.messages, i18nData[this.props.intl.locale] || {});
-         i18nMerged = true;
-      }
-
       return (
          <div ref="componentNode" className="mdl-layout mdl-js-layout">
             <main style={loginBoxStyle} className="mdl-layout__content">
@@ -116,4 +85,4 @@ const Login = withRouter(
   })
 )
 
-export default injectIntl(Login);
+export default withI18n(Login, "Login", require.context("./i18n", false));
