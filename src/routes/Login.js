@@ -5,6 +5,21 @@ import auth from "../utilities/Authentication";
 import { injectIntl } from "react-intl";
 import { merge } from "lodash";
 
+// Import the language bundles that we know about...
+import en from "./i18n/Login.en.json";
+import es from "./i18n/Login.es.json";
+import esES from "./i18n/Login.es-ES.json";
+
+// Locale variable to the module to ensure that bundles are only merged once...
+let i18nMerged = false;
+
+// Create the i18n data (the appropriate data for the locale will be selected at runtime)...
+const i18nData = {
+   en: en,
+   es: es,
+   "es-ES": esES
+};
+
 
 const loginBoxStyle = {
    display: "flex",
@@ -54,36 +69,16 @@ const Login = withRouter(
 
     render() {
 
-      // The following code attempts to load the current message bundle for the current locale
-      // for this component. It first tries the main locale (i.e. "es-ES") then tries the 
-      // locale without the region code (i.e. "es") and finally falls back to the default
-      // locale (i.e. "en"). When a message bundle has been loaded the messages are merged
-      // into the main bundle.
-      // 
-      // TODO: This shouldn't be done for every call to render, there needs to be some 
-      //       singleton attribute or registry that ensures this is only done once for 
-      //       each component instance. 
-      //       
-      // TODO: Ideally we'd want to abstract this code, possibly to a HOC, but there are 
-      //       issues with handling the variable paths.
-      try 
+      // Merge the locale bundle for this component. The default locale, the language
+      // and the region specific language are all merged so that more specific messages
+      // can override less specific (or missing) messages...
+      const languageWithoutRegionCode = this.props.intl.locale.split(/[_-]+/)[0];
+      if (!i18nMerged)
       {
-         const componentMessages = require(`./i18n/Login.${this.props.intl.locale}.json`);
-         merge(this.props.intl.messages, componentMessages);
-      }
-      catch (e) 
-      {
-         try 
-         {
-            const languageWithoutRegionCode = this.props.intl.locale.split(/[_-]+/)[0];
-            const componentMessages = require(`./i18n/Login.${languageWithoutRegionCode}.json`);
-            merge(this.props.intl.messages, componentMessages);
-         }
-         catch (e)
-         {
-            const componentMessages = require(`./i18n/Login.${this.props.intl.defaultLocale}.json`);
-            merge(this.props.intl.messages, componentMessages);
-         }
+         merge(this.props.intl.messages, i18nData[this.props.intl.defaultLocale] || {});
+         merge(this.props.intl.messages, i18nData[languageWithoutRegionCode] || {});
+         merge(this.props.intl.messages, i18nData[this.props.intl.locale] || {});
+         i18nMerged = true;
       }
 
       return (
