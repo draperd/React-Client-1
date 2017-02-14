@@ -1,8 +1,7 @@
 import React from "react";
 import { collectionEvents } from "../containers/Collection";
+import BreadcrumbUtils from "../../utilities/navigation/BreadcrumbUtils";
 import "./css/Breadcrumb.css";
-
-const BreadcrumbUtil = require("alfresco-js-utils/dist/utils/navigation/Breadcrumbs");
 
 class BreadcrumbTrail extends React.Component {
 
@@ -27,7 +26,7 @@ class BreadcrumbTrail extends React.Component {
    }
 
    componentWillReceiveProps(nextProps) {
-      let breadcrumbData = BreadcrumbUtil.createBreadcrumbs({
+      let breadcrumbData = BreadcrumbUtils.createBreadcrumbs({
          relativePath: nextProps.relativePath
       });
       this.setState({
