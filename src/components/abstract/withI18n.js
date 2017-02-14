@@ -5,6 +5,8 @@ import React from "react";
 import { injectIntl } from "react-intl";
 import { merge } from "lodash";
 
+const registry = {};
+
 /**
  * This is a higher order component enhancer function that will enable a component to load
  * its locale bundles (default, general locale and region specific locale) into the 
@@ -22,35 +24,31 @@ function withI18n(WrappedComponent, componentName, req) {
       constructor(props) {
          super(props);
 
-         let componentMessages;
-         try 
+         if (!registry.WrappedComponent)
          {
-            componentMessages = req(`./${componentName}.${this.props.intl.defaultLocale}.json`);
-            merge(this.props.intl.messages, componentMessages);
-         }
-         catch (e)
-         {
-         }
+            let componentMessages;
+            try {
+               componentMessages = req(`./${componentName}.${this.props.intl.defaultLocale}.json`);
+               merge(this.props.intl.messages, componentMessages);
+            }
+            catch (e) {}
 
-         try 
-         {
-            const languageWithoutRegionCode = this.props.intl.locale.split(/[_-]+/)[0];
-            componentMessages = req(`./${componentName}.${languageWithoutRegionCode}.json`);
-            merge(this.props.intl.messages, componentMessages);
-         }
-         catch (e)
-         {
-         }
+            try {
+               const languageWithoutRegionCode = this.props.intl.locale.split(/[_-]+/)[0];
+               componentMessages = req(`./${componentName}.${languageWithoutRegionCode}.json`);
+               merge(this.props.intl.messages, componentMessages);
+            }
+            catch (e) {}
 
-         try
-         {
-            componentMessages = req(`./${componentName}.${this.props.intl.locale}.json`);
-            merge(this.props.intl.messages, componentMessages);
+            try {
+               componentMessages = req(`./${componentName}.${this.props.intl.locale}.json`);
+               merge(this.props.intl.messages, componentMessages);
+            }
+            catch(e) {}
+
+            registry[WrappedComponent] = true;
          }
-         catch(e)
-         {
-            
-         }
+         
       }
 
       render() {
