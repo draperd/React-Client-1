@@ -16,3 +16,7 @@ npm-debug.log
 /docs/
 /lib/
 *.1.0.tgz
+
+#IntelliJ files
+.idea/
+*.iml
